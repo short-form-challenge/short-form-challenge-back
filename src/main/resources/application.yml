@@ -1,0 +1,29 @@
+spring:
+#  config:
+#    activate:
+#      on-profile: dev
+  profiles:
+    active: dev
+  #    include: prod,test
+  jpa:
+    show_sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        storage_engine: innodb
+#    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+---
+
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/d7?serverTimeZone=Asia/Seoul
+    name: d7
+    username: d7_user
+    password: 1234
