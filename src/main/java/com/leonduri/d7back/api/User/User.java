@@ -1,4 +1,4 @@
-package com.leonduri.d7back.User;
+package com.leonduri.d7back.api.User;
 
 import lombok.Builder;
 import lombok.Getter;
