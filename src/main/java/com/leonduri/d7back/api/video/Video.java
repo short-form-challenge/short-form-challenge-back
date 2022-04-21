@@ -1,5 +1,6 @@
-package com.leonduri.d7back.api.Video;
+package com.leonduri.d7back.api.video;
 
+import com.leonduri.d7back.api.User.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class video {
+public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
@@ -47,7 +48,7 @@ public class video {
     private Boolean isDeleted;
 
 //    Video n : User 1
-//    @ManyToOne
-//    @JoinColumn(name = "posted_by")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "posted_by")
+    private User user;
 }
