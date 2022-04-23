@@ -28,12 +28,20 @@ public class ApiResponse {
     protected void setFailResponse() {
         this.setSuccess(false);
         this.setCode(-1);
-        this.setMsg("실패했습니다.");
+        this.setMsg("정의되지 않은 예외가 발생했습니다.");
     }
 
-    protected ApiResponse fail() {
+    protected static ApiResponse fail() {
         ApiResponse response = new ApiResponse();
         response.setFailResponse();
+        return response;
+    }
+
+    // overloading
+    protected static ApiResponse fail(String msg) {
+        ApiResponse response = new ApiResponse();
+        response.setFailResponse();
+        response.setMsg(msg);
         return response;
     }
 }

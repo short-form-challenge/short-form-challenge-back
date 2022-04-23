@@ -12,7 +12,7 @@ import java.util.List;
 public class SingleApiResponse<T> extends ApiResponse {
     private T data;
 
-    public SingleApiResponse<T> success(T data) {
+    public static <T> SingleApiResponse<T> success(T data) {
         SingleApiResponse<T> response = new SingleApiResponse<>();
         response.setSuccessResponse();
         response.setData(data);
