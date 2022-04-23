@@ -1,14 +1,16 @@
 package com.leonduri.d7back.api.User;
 
+import com.leonduri.d7back.api.User.dto.UserDetailResponseDto;
+import com.leonduri.d7back.api.User.dto.UserSimpleResponseDto;
+import com.leonduri.d7back.utils.ListApiResponse;
+import com.leonduri.d7back.utils.SingleApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,17 +19,25 @@ import java.util.List;
 @RestController
 //@RequestMapping(value = "/v1")
 public class UserController {
-    private final UserRepository repo;
 
 //    @RequestMapping(value="/", method= RequestMethod.GET)
 //    public String mainPage() {
 //        return "redirect:/user";
 //    }
+    private final UserService service;
 
-    @ApiOperation(value = "회원 조회", notes = "모든 회원을 조회한다.") // 각각의 resource에 제목과 설명 표시
-    @GetMapping(value = "/users") // user 테이블의 모든 정보를 읽어옴
-    public List<User> userlist() { // 데이터가 1개 이상일 수 있기에 List<User>로 선언
-        return repo.findAll(); // JPA를 사용하면 CRUD에 대해 설정 없이 쿼리 사용 가능 (select * from user 와 같음)
+    @ApiOperation(value = "전체 유저 조회", notes = "모든 유저를 조회한다.") // 각각의 resource에 제목과 설명 표시
+    @GetMapping(value = "/users")
+    public ListApiResponse<UserSimpleResponseDto> findAllUser() {
+        return ListApiResponse.success(service.findAllUser());
+    }
+
+    @ApiOperation(value = "특정 유저 조회", notes = "userId로 유저 한 명을 조회한다.")
+    @GetMapping(value = "/users/{userId}")
+    public SingleApiResponse<UserSimpleResponseDto> findUserById(
+            @ApiParam(value = "유저 id", required = true) @PathVariable long userId
+    ) throws Exception {
+        return SingleApiResponse.success(service.findUserById(userId));
     }
 
 }
