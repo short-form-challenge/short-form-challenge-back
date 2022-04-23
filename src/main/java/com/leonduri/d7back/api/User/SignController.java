@@ -1,5 +1,6 @@
 package com.leonduri.d7back.api.User;
 
+import com.leonduri.d7back.api.User.dto.JwtResponseDto;
 import com.leonduri.d7back.api.User.dto.UserSignUpRequestDto;
 import com.leonduri.d7back.api.User.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.config.security.JwtTokenProvider;
@@ -30,16 +31,17 @@ public class SignController {
 
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 한다.")
     @PostMapping(value = "/signin")
-    public SingleApiResponse<String> signIn(
+    public SingleApiResponse<JwtResponseDto> signIn(
             @ApiParam(value = "이메일", required = true) @RequestParam String email,
             @ApiParam(value = "비밀번호", required = true) @RequestParam String password) {
         User user = repository.findByEmail(email).orElseThrow(CEmailSignInFailedException::new);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CEmailSignInFailedException();
         }
-        return SingleApiResponse.success(jwtTokenProvider.createToken(
-                String.valueOf(user.getId()), user.getRoles())
-        );
+        return SingleApiResponse.success(new JwtResponseDto(
+                user.getId(),
+                jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles())
+        ));
     }
 
     @ApiOperation(value = "회원 가입", notes = "회원 가입을 한다.")
