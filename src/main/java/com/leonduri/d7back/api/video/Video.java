@@ -1,6 +1,7 @@
 package com.leonduri.d7back.api.video;
 
 import com.leonduri.d7back.api.User.User;
+import com.leonduri.d7back.api.category.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,4 +52,11 @@ public class Video {
     @ManyToOne
     @JoinColumn(name = "posted_by")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @Column(name = "video_length", nullable = false)
+    private Long videoLength;
 }
