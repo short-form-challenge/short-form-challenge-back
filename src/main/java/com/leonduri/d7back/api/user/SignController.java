@@ -33,6 +33,12 @@ public class SignController {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CEmailSignInFailedException();
         }
+
+        // TODO
+        // login 시 마다, challenge 정보 재확인 처리 필요
+        // 만약 해당 유저의 챌린지 중 해당 챌린지의 lastChallengedAt이 로그인 한 날짜와 2일 이상 차이나는 챌린지가 있다면
+        // 해당 챌린지에 대하여 dayCnt를 0으로 처리해야 함
+
         return SingleApiResponse.success(new JwtResponseDto(
                 user.getId(),
                 jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles())
