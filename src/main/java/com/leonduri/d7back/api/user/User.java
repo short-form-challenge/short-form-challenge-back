@@ -1,6 +1,7 @@
 package com.leonduri.d7back.api.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.leonduri.d7back.api.challenge.Challenge;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,6 +48,13 @@ public class User implements UserDetails {
 
     @Column
     private LocalDateTime lastLogin;
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            mappedBy = "user"
+    )
+    List<Challenge> challenges;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
