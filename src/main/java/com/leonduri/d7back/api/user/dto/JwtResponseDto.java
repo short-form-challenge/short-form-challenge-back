@@ -1,4 +1,4 @@
-package com.leonduri.d7back.api.User.dto;
+package com.leonduri.d7back.api.user.dto;
 
 
 public class JwtResponseDto {

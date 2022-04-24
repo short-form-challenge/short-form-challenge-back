@@ -1,4 +1,4 @@
-package com.leonduri.d7back.api.User;
+package com.leonduri.d7back.api.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

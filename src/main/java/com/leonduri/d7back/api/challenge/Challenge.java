@@ -1,6 +1,6 @@
 package com.leonduri.d7back.api.challenge;
 
-import com.leonduri.d7back.api.User.User;
+import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.category.Category;
 
 import javax.persistence.*;

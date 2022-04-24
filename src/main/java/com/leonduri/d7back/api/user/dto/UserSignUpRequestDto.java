@@ -1,6 +1,6 @@
-package com.leonduri.d7back.api.User.dto;
+package com.leonduri.d7back.api.user.dto;
 
-import com.leonduri.d7back.api.User.User;
+import com.leonduri.d7back.api.user.User;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.leonduri.d7back.api.likes;
 
-import com.leonduri.d7back.api.User.User;
+import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.video.Video;
 
 import javax.persistence.*;

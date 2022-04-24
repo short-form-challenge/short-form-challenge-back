@@ -1,11 +1,9 @@
-package com.leonduri.d7back.api.User;
+package com.leonduri.d7back.api.user;
 
-import com.leonduri.d7back.api.User.dto.JwtResponseDto;
-import com.leonduri.d7back.api.User.dto.UserSignUpRequestDto;
-import com.leonduri.d7back.api.User.dto.UserSimpleResponseDto;
+import com.leonduri.d7back.api.user.dto.JwtResponseDto;
+import com.leonduri.d7back.api.user.dto.UserSignUpRequestDto;
+import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.config.security.JwtTokenProvider;
-import com.leonduri.d7back.utils.ApiResponse;
-import com.leonduri.d7back.utils.ListApiResponse;
 import com.leonduri.d7back.utils.SingleApiResponse;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import io.swagger.annotations.Api;
@@ -14,9 +12,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 @Api(tags = {"0. SignIn/SignUp"})
 @RequiredArgsConstructor

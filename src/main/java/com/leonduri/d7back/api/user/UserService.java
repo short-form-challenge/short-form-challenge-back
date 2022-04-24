@@ -1,8 +1,7 @@
-package com.leonduri.d7back.api.User;
+package com.leonduri.d7back.api.user;
 
-import com.leonduri.d7back.api.User.dto.UserSignUpRequestDto;
-import com.leonduri.d7back.api.User.dto.UserSimpleResponseDto;
-import com.leonduri.d7back.utils.ApiResponse;
+import com.leonduri.d7back.api.user.dto.UserSignUpRequestDto;
+import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import lombok.RequiredArgsConstructor;

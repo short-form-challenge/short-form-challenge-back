@@ -1,9 +1,7 @@
-package com.leonduri.d7back.api.User;
+package com.leonduri.d7back.api.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

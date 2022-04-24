@@ -1,18 +1,14 @@
-package com.leonduri.d7back.api.User;
+package com.leonduri.d7back.api.user;
 
-import com.leonduri.d7back.api.User.dto.UserDetailResponseDto;
-import com.leonduri.d7back.api.User.dto.UserSimpleResponseDto;
+import com.leonduri.d7back.api.user.dto.UserDetailResponseDto;
+import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.utils.ListApiResponse;
 import com.leonduri.d7back.utils.SingleApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = {"1. User"})
 @RequiredArgsConstructor
