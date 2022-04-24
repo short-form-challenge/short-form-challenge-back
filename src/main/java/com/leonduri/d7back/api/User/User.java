@@ -1,82 +1,97 @@
 package com.leonduri.d7back.api.User;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@NoArgsConstructor
+@Builder
+@Entity
 @Getter
 @Setter
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(unique = true, nullable = false)
     private String nickname;
 
     @Column(nullable = false)
-    @ColumnDefault("false")
     private boolean isAdmin;
 
     @Column
     private String profileFilePath;
 
     @Column
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles.stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
         return this.email;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    // not needed, but should be implemented, which returns always true
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
