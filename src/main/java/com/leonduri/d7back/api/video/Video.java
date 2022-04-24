@@ -1,6 +1,6 @@
 package com.leonduri.d7back.api.video;
 
-import com.leonduri.d7back.api.User.User;
+import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.category.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,16 +22,16 @@ public class Video {
     @Column(name="file_path", nullable = false)
     private String filePath;
 
+//    private String description;
+
     @Column(name="thumbnail_path", nullable = false)
     private String thumbnailPath;
 
-    @Column(name="is_embeded", columnDefinition = "boolean default false")
-    private Boolean isEmbeded;
+//    @Column(name="is_embeded", columnDefinition = "boolean default false")
+//    private Boolean isEmbeded;
 
     @Column(nullable = false)
     private String title;
-
-    private String description;
 
     @Column(name="show_id", nullable = false)
     private Long showId;
@@ -58,5 +58,5 @@ public class Video {
     private Category category;
 
     @Column(name = "video_length", nullable = false)
-    private Long videoLength;
+    private Integer videoLength;
 }
