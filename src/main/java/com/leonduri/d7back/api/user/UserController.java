@@ -1,6 +1,5 @@
 package com.leonduri.d7back.api.user;
 
-import com.leonduri.d7back.api.user.dto.UserDetailResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.utils.ListApiResponse;
 import com.leonduri.d7back.utils.SingleApiResponse;
