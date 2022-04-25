@@ -17,6 +17,6 @@ public class Likes {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "likde_on")
+    @JoinColumn(name = "liked_on")
     private Video video;
 }
