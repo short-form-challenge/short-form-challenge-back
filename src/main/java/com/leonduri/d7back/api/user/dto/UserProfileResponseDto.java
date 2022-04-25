@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserProfileResponseDto {
     public long userId;
@@ -16,13 +18,13 @@ public class UserProfileResponseDto {
     public int totalBadgeCnt;
     public int ongoingChallengeCnt;
     // user의 challenge 중 dayCnt > 0 && LastChallengedAt이 오늘인 challenge 수
-    public List<ChallengeByUserResponseDto> challenges;
+    public Set<ChallengeByUserResponseDto> challenges;
 
     public UserProfileResponseDto (User u) {
         this.userId = u.getId();
         this.nickname = u.getNickname();
         this.profileFilePath = u.getProfileFilePath();
-        List<Challenge> cList = u.getChallenges();
+        Set<Challenge> cList = u.getChallenges();
         this.totalBadgeCnt = 0;
         this.ongoingChallengeCnt = 0;
         for (Challenge c: cList) {
@@ -30,5 +32,7 @@ public class UserProfileResponseDto {
             if (c.getDayCnt() > 0 && c.getLastChallengedAt().equals(LocalDate.now()))
                 this.ongoingChallengeCnt++;
         }
+        this.challenges = cList.stream().map(ChallengeByUserResponseDto::new)
+                .collect(Collectors.toSet());
     }
 }
