@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Builder
@@ -54,7 +55,9 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL,
             mappedBy = "user"
     )
-    List<Challenge> challenges;
+    Set<Challenge> challenges;
+    // reference
+    // https://perfectacle.github.io/2019/05/01/hibernate-multiple-bag-fetch-exception/
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
