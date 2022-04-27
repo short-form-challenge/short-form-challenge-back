@@ -37,6 +37,7 @@ public class VideoListResponseDto {
         for(Likes like : likesList){
             if (like.getVideo().getId() == video.getId()) {
                 this.isLiked = true;
+                break;
             }
         }
         this.category = video.getCategory();

@@ -38,11 +38,12 @@ public class VideoController {
 
     @ApiOperation(value = "비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos")
-    public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(name = "유저 Id", required = true) @RequestParam("userId") Long userId,
-                                                                   @ApiParam(name = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
-                                                                   @ApiParam(name = "페이지 번호", required = true) @RequestParam("page") Long page){
+    public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(value = "유저 Id", required = true) @RequestParam("userId") Long userId,
+                                                                   @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
+                                                                   @ApiParam(value = "페이지 번호", required = true) @RequestParam("page") Long page){
         List<VideoListResponseDto> videoListResponseDtos = videoService.getVideoList(userId, categoryId, page);
 
         return VideoListApiResponse.success(videoListResponseDtos);
     }
+//    RequestDto 만들기
 }
