@@ -2,6 +2,7 @@ package com.leonduri.d7back.api.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.leonduri.d7back.api.challenge.Challenge;
+import com.leonduri.d7back.api.likes.Likes;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @OneToMany(mappedBy = "user")
+    private List<Likes> likesList = new ArrayList<>();
 
     @Column(unique = true, nullable = false, length = 100)
     private String email;
