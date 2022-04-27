@@ -2,9 +2,15 @@ package com.leonduri.d7back.api.likes;
 
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.video.Video;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "likes")
 public class Likes {
@@ -17,6 +23,6 @@ public class Likes {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "likde_on")
+    @JoinColumn(name = "liked_on")
     private Video video;
 }

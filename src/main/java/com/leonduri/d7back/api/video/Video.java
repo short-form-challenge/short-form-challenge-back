@@ -56,6 +56,7 @@ public class Video {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+//    Null로 나오는 이유는?
 
     @Column(name = "video_length", nullable = false)
     private Integer videoLength;
