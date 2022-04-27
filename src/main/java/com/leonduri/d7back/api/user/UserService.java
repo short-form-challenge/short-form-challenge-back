@@ -1,5 +1,6 @@
 package com.leonduri.d7back.api.user;
 
+import com.leonduri.d7back.api.user.dto.UserProfileResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSignUpRequestDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
@@ -33,5 +34,10 @@ public class UserService {
 
     public UserSimpleResponseDto save(UserSignUpRequestDto requestDto) {
         return new UserSimpleResponseDto(repository.save(requestDto.toEntity()));
+    }
+
+    public UserProfileResponseDto getUserProfile(Long userId) throws Exception {
+        return new UserProfileResponseDto(repository.findById(userId)
+                .orElseThrow(CUserNotFoundException::new));
     }
 }

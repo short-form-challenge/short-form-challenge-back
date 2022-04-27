@@ -1,5 +1,6 @@
 package com.leonduri.d7back.api.user;
 
+import com.leonduri.d7back.api.user.dto.UserProfileResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.utils.ListApiResponse;
 import com.leonduri.d7back.utils.SingleApiResponse;
@@ -33,6 +34,16 @@ public class UserController {
             @ApiParam(value = "유저 id", required = true) @PathVariable long userId
     ) throws Exception {
         return SingleApiResponse.success(service.findUserById(userId));
+    }
+
+
+    // TODO 컨트롤러 메서드 명명 규칙 다시 한 번 생각
+    @ApiOperation(value = "특정 유저의 프로필 조회", notes = "userId로 유저 한 명의 프로필을 조회한다.")
+    @GetMapping(value = "/users/{userId}/profile")
+    public SingleApiResponse<UserProfileResponseDto> getUserProfile(
+            @ApiParam(value = "유저 id", required = true) @PathVariable long userId
+    ) throws Exception {
+        return SingleApiResponse.success(service.getUserProfile(userId));
     }
 
 }
