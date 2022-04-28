@@ -18,13 +18,13 @@ public class UserProfileResponseDto {
     public int totalBadgeCnt;
     public int ongoingChallengeCnt;
     // user의 challenge 중 dayCnt > 0 && LastChallengedAt이 오늘인 challenge 수
-    public Set<ChallengeByUserResponseDto> challenges;
+    public List<ChallengeByUserResponseDto> challenges;
 
     public UserProfileResponseDto (User u) {
         this.userId = u.getId();
         this.nickname = u.getNickname();
         this.profileFilePath = u.getProfileFilePath();
-        Set<Challenge> cList = u.getChallenges();
+        List<Challenge> cList = u.getChallenges();
         this.totalBadgeCnt = 0;
         this.ongoingChallengeCnt = 0;
         for (Challenge c: cList) {
@@ -33,6 +33,6 @@ public class UserProfileResponseDto {
                 this.ongoingChallengeCnt++;
         }
         this.challenges = cList.stream().map(ChallengeByUserResponseDto::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

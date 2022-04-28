@@ -37,7 +37,8 @@ public class UserService {
     }
 
     public UserProfileResponseDto getUserProfile(Long userId) throws Exception {
-        return new UserProfileResponseDto(repository.findById(userId)
-                .orElseThrow(CUserNotFoundException::new));
+        User user = repository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        // TODO challenge update logic
+        return new UserProfileResponseDto(user);
     }
 }
