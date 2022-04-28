@@ -24,20 +24,19 @@ public class UserController {
 
     @ApiOperation(value = "전체 유저 조회", notes = "모든 유저를 조회한다.") // 각각의 resource에 제목과 설명 표시
     @GetMapping(value = "/users")
-    public ListApiResponse<UserSimpleResponseDto> findAllUser() {
+    public ListApiResponse<UserSimpleResponseDto> getAllUsers() {
         return ListApiResponse.success(service.findAllUser());
     }
 
     @ApiOperation(value = "특정 유저 조회", notes = "userId로 유저 한 명을 조회한다.")
     @GetMapping(value = "/users/{userId}")
-    public SingleApiResponse<UserSimpleResponseDto> findUserById(
+    public SingleApiResponse<UserSimpleResponseDto> getUserById(
             @ApiParam(value = "유저 id", required = true) @PathVariable long userId
     ) throws Exception {
         return SingleApiResponse.success(service.findUserById(userId));
     }
 
 
-    // TODO 컨트롤러 메서드 명명 규칙 다시 한 번 생각
     @ApiOperation(value = "특정 유저의 프로필 조회", notes = "userId로 유저 한 명의 프로필을 조회한다.")
     @GetMapping(value = "/users/{userId}/profile")
     public SingleApiResponse<UserProfileResponseDto> getUserProfile(
