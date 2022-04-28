@@ -3,12 +3,14 @@ package com.leonduri.d7back.api.challenge;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.category.Category;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +33,17 @@ public class Challenge {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    public void setDayCntZero() {
+        this.dayCnt = 0;
+    }
+
+    public void increaseDayCnt() {
+        this.dayCnt += 1;
+    }
+
+    public void increaseBadgeCnt() {
+        this.badgeCnt += 1;
+    }
+
 }
