@@ -1,18 +1,14 @@
 package com.leonduri.d7back.api.video;
 
 import com.fasterxml.jackson.annotation.OptBoolean;
+import com.leonduri.d7back.api.video.dto.MyVideoListRequestDto;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
 import com.leonduri.d7back.utils.VideoApiResponse;
 import com.leonduri.d7back.utils.VideoListApiResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,12 +34,13 @@ public class VideoController {
 
     @ApiOperation(value = "비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos")
-    public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(value = "유저 Id", required = true) @RequestParam("userId") Long userId,
-                                                                   @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
-                                                                   @ApiParam(value = "페이지 번호", required = true) @RequestParam("page") Long page){
-        List<VideoListResponseDto> videoListResponseDtos = videoService.getVideoList(userId, categoryId, page);
+    public VideoListApiResponse<VideoListResponseDto> getMyVideoList(@RequestBody @ApiParam(required = true)
+                                                                                 MyVideoListRequestDto myVideoListRequestDto){
+        Long userId = myVideoListRequestDto.getUserId();
+        Long categoryId = myVideoListRequestDto.getCate();
+        Long page = myVideoListRequestDto.getPage();
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, page);
 
         return VideoListApiResponse.success(videoListResponseDtos);
     }
-//    RequestDto 만들기
 }
