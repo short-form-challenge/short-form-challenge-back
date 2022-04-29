@@ -43,6 +43,7 @@ public class SignController {
     public SingleApiResponse<UserSimpleResponseDto> signUp(
             @RequestBody @ApiParam(value = "회원 가입에 필요한 유저 정보", required = true)
                     UserSignUpRequestDto requestDto) {
+        requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         return SingleApiResponse.success(service.save(requestDto));
     }
 }
