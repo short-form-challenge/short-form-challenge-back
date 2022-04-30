@@ -4,6 +4,7 @@ import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,5 +32,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse emailSignInFailed(HttpServletRequest request, CEmailSignInFailedException e) {
         return ApiResponse.fail(CEmailSignInFailedException.errorMsg);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED) // 405
+    protected ApiResponse requestMethodNotAllowed(HttpServletRequest request, Exception e) {
+        return ApiResponse.fail("Http method가 올바르지 않습니다.");
     }
 }
