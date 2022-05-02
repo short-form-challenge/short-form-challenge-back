@@ -4,12 +4,11 @@ import com.leonduri.d7back.api.user.dto.*;
 import com.leonduri.d7back.config.security.JwtTokenProvider;
 import com.leonduri.d7back.utils.SingleApiResponse;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = {"0. SignIn/SignUp"})
 @RequiredArgsConstructor
@@ -25,13 +24,13 @@ public class SignController {
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 한다.")
     @PostMapping(value = "/signin")
     public SingleApiResponse<JwtResponseDto> signIn(
-            @RequestBody @ApiParam(value = "유저 로그인 정보", required = true)
-                    UserSignInRequestDto requestDto) {
+            @RequestBody @ApiParam(value = "유저 로그인 정보", required = true) UserSignInRequestDto requestDto) {
         User user = repository.findByEmail(requestDto.getEmail()).orElseThrow(CEmailSignInFailedException::new);
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new CEmailSignInFailedException();
         }
 
+        // TODO refreshToken
         return SingleApiResponse.success(new JwtResponseDto(
                 user.getId(),
                 jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles())
