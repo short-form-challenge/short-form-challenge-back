@@ -1,7 +1,9 @@
 package com.leonduri.d7back.utils;
 
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
+import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,7 +38,19 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED) // 405
-    protected ApiResponse requestMethodNotAllowed(HttpServletRequest request, Exception e) {
+    protected ApiResponse requestMethodNotAllowed(HttpServletRequest request, HttpRequestMethodNotSupportedException e) {
         return ApiResponse.fail("Http method가 올바르지 않습니다.");
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+    protected ApiResponse malformedJwtException(HttpServletRequest request, MalformedJwtException e) {
+        return ApiResponse.fail("jwt 토큰 형식이 올바르지 않습니다.");
+    }
+
+    @ExceptionHandler(CInvalidJwtTokenException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse invalidJwtToken(HttpServletRequest request, CInvalidJwtTokenException e) {
+        return ApiResponse.fail(CInvalidJwtTokenException.errorMsg);
     }
 }
