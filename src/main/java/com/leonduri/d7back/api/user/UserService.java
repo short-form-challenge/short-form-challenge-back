@@ -3,12 +3,15 @@ package com.leonduri.d7back.api.user;
 import com.leonduri.d7back.api.challenge.Challenge;
 import com.leonduri.d7back.api.challenge.ChallengeRepository;
 import com.leonduri.d7back.api.user.dto.UserProfileResponseDto;
+import com.leonduri.d7back.api.user.dto.UserUpdateResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSignUpRequestDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
+import com.leonduri.d7back.utils.FileSystemStorageService;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepo;
     private final ChallengeRepository challengeRepo;
+    private final FileSystemStorageService storageService;
 
 
     public List<UserSimpleResponseDto> findAllUser() {
@@ -54,5 +58,13 @@ public class UserService {
             challengeRepo.save(c);
         }
         return new UserProfileResponseDto(user);
+    }
+
+    public UserUpdateResponseDto updateUser(long userId, MultipartFile profileFile, String nickname) {
+        User user = userRepo.findById(userId).orElseThrow(CUserNotFoundException::new);
+        if (profileFile != null) user.setProfileFilePath(storageService.store(profileFile, user.getEmail()));
+        if (nickname != null) user.setNickname(nickname);
+        userRepo.save(user);
+        return new UserUpdateResponseDto(user);
     }
 }
