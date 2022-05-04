@@ -30,16 +30,19 @@ public class VideoController {
 //        return videoRepository.findById(videoId);
 //    }
 
+    @ApiOperation(value = "비디오 디테일 조회", notes = "비디오 하나의 디테일을 조회한다.")
     @GetMapping(value = "/videos/{videoId}/{userId}")
     public SingleApiResponse<VideoDetailResponseDto> getVideoById(
-            @PathVariable long videoId, @PathVariable long userId) throws Exception {
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
+            @PathVariable @ApiParam(value = "유저 Id", required = true) long userId) throws Exception {
         videoService.upHit(videoId);
         return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
     }
 
+    @ApiOperation(value = "비디오 삭제", notes = "비디오 id를 기준으로 비디오 하나를 삭제한다.")
     @DeleteMapping(value = "videos/{videoId}")
     public void deleteVideoById(
-            @PathVariable long videoId) throws Exception {
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
         videoService.deleteVideoById(videoId);
     }
 
