@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(tags = {"2. Video"})
@@ -36,6 +37,12 @@ public class VideoController {
         return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
     }
 
+    @DeleteMapping(value = "videos/{videoId}")
+    public void deleteVideoById(
+            @PathVariable long videoId) throws Exception {
+        videoService.deleteVideoById(videoId);
+    }
+
 
 //   GetMapping api 이름
     @ApiOperation(value = "나의 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
@@ -46,8 +53,18 @@ public class VideoController {
         Long categoryId = videoListRequestDto.getCate();
         Long page = videoListRequestDto.getPage();
         List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, page);
+        List<VideoListResponseDto> ret = new ArrayList<>();
 
-        return VideoListApiResponse.success(videoListResponseDtos);
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != 6) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == 6) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
+        return VideoListApiResponse.success(ret);
     }
 
     @ApiOperation(value = "메인 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
@@ -58,8 +75,19 @@ public class VideoController {
         Long categoryId = videoListRequestDto.getCate();
         Long page = videoListRequestDto.getPage();
 
-        List<VideoListResponseDto> mainVideoListResponseDtos = videoService.getMainVideoList(userId, categoryId, page);
-        return VideoListApiResponse.success(mainVideoListResponseDtos);
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMainVideoList(userId, categoryId, page);
+        List<VideoListResponseDto> ret = new ArrayList<>();
+
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != 6) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == 6) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
+        return VideoListApiResponse.success(ret);
     }
 
 //    Login하지 않은 회원
@@ -70,9 +98,19 @@ public class VideoController {
         Long categoryId = requestDto.getCate();
         Long page = requestDto.getPage();
 
-        List<AnonymousUserVideoListResponseDto> videoList = videoService.getAnonymousUserMain(categoryId, page);
+        List<AnonymousUserVideoListResponseDto> videoListResponseDtos = videoService.getAnonymousUserMain(categoryId, page);
+        List<AnonymousUserVideoListResponseDto> ret = new ArrayList<>();
 
-        return VideoListApiResponse.success(videoList);
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != 6) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == 6) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
+        return VideoListApiResponse.success(ret);
     }
 
     @ApiOperation(value = "관심 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
@@ -84,7 +122,17 @@ public class VideoController {
         Long page = videoListRequestDto.getPage();
 
         List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, categoryId, page);
+        List<VideoListResponseDto> ret = new ArrayList<>();
 
-        return VideoListApiResponse.success(videoListResponseDtos);
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != 6) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == 6) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
+        return VideoListApiResponse.success(ret);
     }
 }

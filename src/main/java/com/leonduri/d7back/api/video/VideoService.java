@@ -32,15 +32,16 @@ public class VideoService {
         return videoRepository.upHit(videoId);
     }
 
+    public void deleteVideoById(Long videoId) {
+        videoRepository.deleteById(videoId);
+//        Exception 추가 필요
+    }
 
     public List<VideoListResponseDto> getMyVideoList(Long userId, Long categoryId, Long page) {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         List<VideoListResponseDto> ret = new ArrayList<>();
         List<Video> vList = videoRepository.getMyVideoList(userId, categoryId, (page - 1) * (count -1), count);
         for (int i = 0; i < vList.size(); i++) {
-            if (i == 6) {
-                break;
-            }
             ret.add(new VideoListResponseDto(vList.get(i), requestUser));
         }
 
@@ -52,9 +53,6 @@ public class VideoService {
         List<VideoListResponseDto> ret = new ArrayList<>();
         List<Video> vList = videoRepository.getMainVideoList(categoryId, (page - 1) * (count -1), count);
         for (int i = 0; i < vList.size(); i++) {
-            if (i == 6) {
-                break;
-            }
             ret.add(new VideoListResponseDto(vList.get(i), requestUser));
         }
 
