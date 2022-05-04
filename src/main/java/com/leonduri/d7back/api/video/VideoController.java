@@ -41,16 +41,20 @@ public class VideoController {
     }
 
     //    userId 임시
+    @ApiOperation(value = "like 증가", notes = "해당 비디오의 like를 증가시킨다.")
     @PostMapping(value = "/videos/upLikes/{videoId}/{userId}")
     public SingleApiResponse<VideoLikesResponseDto> updateUpVideoLikes(
-            @PathVariable long videoId, @PathVariable long userId) throws Exception {
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
+            @PathVariable @ApiParam(value = "유저 Id", required = true)long userId) throws Exception {
         videoService.upLikeCnt(videoId, userId);
         return SingleApiResponse.success(videoService.findById(videoId, userId));
     }
 
+    @ApiOperation(value = "like 감소", notes = "해당 비디오의 like를 감소시킨다.")
     @PostMapping(value = "/videos/downLikes/{videoId}/{userId}")
     public SingleApiResponse<VideoLikesResponseDto> updateDownVideoLikes(
-            @PathVariable long videoId, @PathVariable long userId) throws Exception {
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
+            @PathVariable @ApiParam(value = "유저Id", required = true) long userId) throws Exception {
         videoService.downLikeCnt(videoId, userId);
         return SingleApiResponse.success(videoService.findById(videoId, userId));
     }
