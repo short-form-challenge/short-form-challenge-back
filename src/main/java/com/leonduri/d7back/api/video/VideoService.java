@@ -1,11 +1,15 @@
 package com.leonduri.d7back.api.video;
 
+import com.leonduri.d7back.api.likes.Likes;
+import com.leonduri.d7back.api.likes.LikesRepository;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.user.UserRepository;
 import com.leonduri.d7back.api.video.dto.AnonymousUserVideoListResponseDto;
 import com.leonduri.d7back.api.video.dto.VideoDetailResponseDto;
+import com.leonduri.d7back.api.video.dto.VideoLikesResponseDto;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
+import com.leonduri.d7back.utils.exception.CVideoNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +23,43 @@ import java.util.stream.Collectors;
 public class VideoService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
+    private final LikesRepository likesRepository;
 
     Long count = 7L;
     public VideoDetailResponseDto findVideoById(Long videoId, Long userId) throws Exception {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
-        Optional<Video> video = videoRepository.findById(videoId);
-        VideoDetailResponseDto videoListResponseDto = new VideoDetailResponseDto(video.get(), requestUser);
+        Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+        VideoDetailResponseDto videoListResponseDto = new VideoDetailResponseDto(video, requestUser);
         return videoListResponseDto;
+    }
+
+    public VideoLikesResponseDto findById(Long videoId, Long userId) throws Exception {
+        User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+        VideoLikesResponseDto v = new VideoLikesResponseDto(video, requestUser);
+        return v;
     }
 
     public int upHit(Long videoId) {
         return videoRepository.upHit(videoId);
     }
 
+//    like를 눌렀는지 안 눌렀는지 판단 -> 프론트? 백?
+    public void upLikeCnt(Long videoId, Long userId) throws Exception {
+        videoRepository.upLikeCnt(videoId);
+        User likedBy = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        Video likedOn = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+        likesRepository.save(new Likes(likedBy, likedOn));
+    }
+
+    public void downLikeCnt(Long videoId, Long userId) throws Exception {
+        videoRepository.downLikeCnt(videoId);
+//        User likedBy = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+//        Video likedOn = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+//        likesRepository.save(new Likes(likedBy, likedOn));
+        likesRepository.deleteLikes(videoId, userId);
+        //삭제
+    }
 
     public List<VideoListResponseDto> getMyVideoList(Long userId, Long categoryId, Long page) {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
