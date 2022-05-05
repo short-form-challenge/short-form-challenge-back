@@ -51,7 +51,7 @@ public class UserService {
          // challenge update
         List<Challenge> challenges = user.getChallenges();
         for (Challenge c: challenges) {
-            c.setBadgeCnt(c.getDayCnt() / 7);
+            c.setBadgeCnt(c.getBadgeCnt() + c.getDayCnt() / 7);
             c.setDayCnt(c.getDayCnt() % 7);
             // challenge failed
             if (!LocalDate.now().minusDays(1L).isAfter(c.getLastChallengedAt())) c.setDayCntZero();
@@ -62,7 +62,7 @@ public class UserService {
 
     public UserUpdateResponseDto updateUser(long userId, MultipartFile profileFile, String nickname) {
         User user = userRepo.findById(userId).orElseThrow(CUserNotFoundException::new);
-        if (profileFile != null) user.setProfileFilePath(storageService.store(profileFile, user.getEmail()));
+        if (profileFile != null) user.setProfileFilePath(storageService.storeProfile(profileFile, user.getEmail()));
         if (nickname != null) user.setNickname(nickname);
         userRepo.save(user);
         return new UserUpdateResponseDto(user);

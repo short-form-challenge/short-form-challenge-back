@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @Secured("ROLE_USER")
-    @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token",
+    @ApiImplicitParam(name = "Authorization", value = "accessToken",
                     required = true, dataType = "String", paramType = "header")
     @ApiOperation(value = "유저 본인의 프로필 수정", notes = "로그인 한 유저의 프로필을 수정한다.",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -68,7 +68,7 @@ public class UserController {
         String jwt = jwtTokenProvider.resolveToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
         return SingleApiResponse.success(service.updateUser(
-                Long.valueOf(jwtTokenProvider.getUserPk(jwt)), profileFile, nickname)
+                Long.parseLong(jwtTokenProvider.getUserPk(jwt)), profileFile, nickname)
         );
     }
 
