@@ -14,24 +14,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 
 @Service
 public class FileSystemStorageService {
 
     @Value("${spring.servlet.multipart.location}")
-    private String uploadPath;
+    private String baseUploadPath;
+
 
     public void init() {
         try {
-            Files.createDirectories(Paths.get(uploadPath));
+            Files.createDirectories(Paths.get(baseUploadPath));
         } catch (IOException e) {
             throw new RuntimeException("Could not create upload folder!");
         }
     }
 
-    public String store(MultipartFile file, String username) {
-        String[] tmp = file.getOriginalFilename().split("\\.");
-        String newFileName = username + '.' + tmp[tmp.length - 1];
+    private String store(MultipartFile file, String directoryPath, String fileName) {
+        String uploadPath = baseUploadPath + directoryPath + "/";
         try {
             if (file.isEmpty()) {
                 throw new Exception("ERROR : File is empty.");
@@ -42,17 +43,36 @@ public class FileSystemStorageService {
             }
 
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, root.resolve(newFileName),
+                Files.copy(inputStream, root.resolve(fileName),
                         StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
-        return uploadPath + newFileName;
+        return uploadPath + fileName;
     }
 
+    public String storeProfile(MultipartFile file, String username) {
+        String[] tmp = file.getOriginalFilename().split("\\.");
+        String newFileName = username + '.' + tmp[tmp.length - 1];
+        return store(file, "profiles", newFileName);
+    }
+
+    public String storeVideo(MultipartFile video, String postedBy, LocalDateTime postedAt) {
+        String[] tmp = video.getOriginalFilename().split("\\.");
+        String newFileName = "v_" + postedBy + '_' + postedAt.toString() + '.' + tmp[tmp.length - 1];
+        return store(video, "videos", newFileName);
+    }
+
+    public String storeThumbnail(MultipartFile thumbnail, String postedBy, LocalDateTime postedAt) {
+        String[] tmp = thumbnail.getOriginalFilename().split("\\.");
+        String newFileName = "t_" + postedBy + '_' + postedAt.toString() + '.' + tmp[tmp.length - 1];
+        return store(thumbnail, "thumbnails", newFileName);
+    }
+
+
     public Path load(String filename) {
-        return Paths.get(uploadPath).resolve(filename);
+        return Paths.get(baseUploadPath).resolve(filename);
     }
 
     public Resource loadAsResource(String filename) {
@@ -72,6 +92,6 @@ public class FileSystemStorageService {
     }
 
     public void delete(String filename) {
-        FileSystemUtils.deleteRecursively(Paths.get(uploadPath + '/' + filename).toFile());
+        FileSystemUtils.deleteRecursively(Paths.get(baseUploadPath + '/' + filename).toFile());
     }
 }
