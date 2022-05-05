@@ -1,40 +1,33 @@
 package com.leonduri.d7back.api.video;
 
-import com.fasterxml.jackson.annotation.OptBoolean;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
-import com.leonduri.d7back.utils.VideoApiResponse;
+import com.leonduri.d7back.api.video.dto.VideoSaveRequestDto;
+import com.leonduri.d7back.api.video.dto.VideoSimpleResponseDto;
+import com.leonduri.d7back.config.security.JwtTokenProvider;
+import com.leonduri.d7back.utils.SingleApiResponse;
 import com.leonduri.d7back.utils.VideoListApiResponse;
+import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
+import com.leonduri.d7back.utils.exception.CWrongMediaFormatException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 @Api(tags = {"2. Video"})
 @RequiredArgsConstructor
 @RestController
 public class VideoController {
-//    private final VideoRepository videoRepository;
-    private final VideoService videoService;
 
-//    @ApiOperation(value = "비디오 조회", notes = "모든 비디오를 조회한다.")
-//    @GetMapping(value = "/videos")
-//    public List<Video> videoList() {
-//        return videoRepository.findAll();
-//    }
-//
-//    @ApiOperation(value = "비디오 한개 조회", notes = "id에 맞는 비디오 하나를 조회한다.")
-//    @GetMapping(value = "/videos/{videoId}")
-//    public Optional<Video> findById(@ApiParam(name = "비디오 ID", required = true) @PathVariable Long videoId) {
-//        return videoRepository.findById(videoId);
-//    }
+    private final VideoService videoService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value = "비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos")
@@ -44,6 +37,34 @@ public class VideoController {
         List<VideoListResponseDto> videoListResponseDtos = videoService.getVideoList(userId, categoryId, page);
 
         return VideoListApiResponse.success(videoListResponseDtos);
+    }
+
+    @Secured("ROLE_USER")
+    @ApiImplicitParam(name = "Authorization", value = "accessToken",
+            required = true, dataType = "String", paramType = "header")
+    @ApiOperation(value = "비디오 업로드", notes = "비디오를 업로드한다.")
+    @PostMapping(value="/videos")
+    public SingleApiResponse<VideoSimpleResponseDto> saveVideo(
+            HttpServletRequest request,
+            @RequestPart(value = "videoInfo") VideoSaveRequestDto requestDto,
+            @RequestPart(required = true) MultipartFile video,
+            @RequestPart(required = true) MultipartFile thumbnail
+        ) throws Exception{
+
+//        String jwt = jwtTokenProvider.resolveToken(request);
+//        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        // required fields in JSON (videoInfo)
+        if (requestDto.getTitle() == null || requestDto.getLength() == 0 || requestDto.getCategoryId() == 0)
+            throw new MissingServletRequestParameterException("","");
+
+        if (!video.getContentType().startsWith("video") || !thumbnail.getContentType().startsWith("image")) {
+            throw new CWrongMediaFormatException();
+        }
+
+        return SingleApiResponse.success(videoService.saveVideo(
+                requestDto, 1, video, thumbnail));
+//                requestDto, jwtTokenProvider.getUserPk(jwt), video, thumbnail));
     }
 //    RequestDto 만들기
 }
