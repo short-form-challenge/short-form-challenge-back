@@ -56,6 +56,7 @@ public class VideoController {
             @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
             @PathVariable @ApiParam(value = "유저Id", required = true) long userId) throws Exception {
         videoService.downLikeCnt(videoId, userId);
+
         return SingleApiResponse.success(videoService.findById(videoId, userId));
     }
 

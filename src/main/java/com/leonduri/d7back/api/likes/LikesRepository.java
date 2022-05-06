@@ -12,9 +12,6 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     @Override
     List<Likes> findAll();
 
-//    좋아요 추가, post -> like_cnt 증가
-
-//    좋아요 삭제, post -> like_cnt --
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM Likes where liked_on = :videoId and liked_by = :userId", nativeQuery = true)

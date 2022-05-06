@@ -37,6 +37,7 @@ public class VideoService {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
         VideoLikesResponseDto v = new VideoLikesResponseDto(video, requestUser);
+
         return v;
     }
 
@@ -54,9 +55,8 @@ public class VideoService {
 
     public void downLikeCnt(Long videoId, Long userId) throws Exception {
         videoRepository.downLikeCnt(videoId);
-//        User likedBy = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
-//        Video likedOn = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
-//        likesRepository.save(new Likes(likedBy, likedOn));
+        User likedBy = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        Video likedOn = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
         likesRepository.deleteLikes(videoId, userId);
         //삭제
     }
