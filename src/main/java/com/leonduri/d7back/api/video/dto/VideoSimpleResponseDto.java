@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class VideoSimpleResponseDto {
     public Long id;
     public String title;
+    public String contentFilePath;
+    public String thumbnailFilePath;
     public long postedBy;
 
     public VideoSimpleResponseDto(Video video) {
