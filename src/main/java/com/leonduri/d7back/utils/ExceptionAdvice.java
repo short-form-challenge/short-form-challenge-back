@@ -1,9 +1,6 @@
 package com.leonduri.d7back.utils;
 
-import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
-import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
-import com.leonduri.d7back.utils.exception.CUserNotFoundException;
-import com.leonduri.d7back.utils.exception.CWrongMediaFormatException;
+import com.leonduri.d7back.utils.exception.*;
 import io.jsonwebtoken.MalformedJwtException;
 import io.swagger.annotations.ApiImplicitParam;
 import lombok.RequiredArgsConstructor;
@@ -82,6 +79,12 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse httpMessageNotReadable(HttpServletRequest request, HttpMessageNotReadableException e) {
         return ApiResponse.fail("JSON 형식이 맞지 않아 파싱할 수 없거나 request message 중 형식 오류가 있습니다.");
+    }
+
+    @ExceptionHandler(CUnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ApiResponse unauthorized (HttpServletRequest request, CUnauthorizedException e) {
+        return ApiResponse.fail(CUnauthorizedException.errorMsg);
     }
 
 }
