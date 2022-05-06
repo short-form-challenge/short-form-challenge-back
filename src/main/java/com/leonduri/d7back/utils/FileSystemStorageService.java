@@ -58,15 +58,15 @@ public class FileSystemStorageService {
         return store(file, "profiles", newFileName);
     }
 
-    public String storeVideo(MultipartFile video, String postedBy, LocalDateTime postedAt) {
+    public String storeVideo(MultipartFile video, long videoId) {
         String[] tmp = video.getOriginalFilename().split("\\.");
-        String newFileName = "v_" + postedBy + '_' + postedAt.toString() + '.' + tmp[tmp.length - 1];
+        String newFileName = "v_" + videoId + '.' + tmp[tmp.length - 1];
         return store(video, "videos", newFileName);
     }
 
-    public String storeThumbnail(MultipartFile thumbnail, String postedBy, LocalDateTime postedAt) {
+    public String storeThumbnail(MultipartFile thumbnail, long videoId) {
         String[] tmp = thumbnail.getOriginalFilename().split("\\.");
-        String newFileName = "t_" + postedBy + '_' + postedAt.toString() + '.' + tmp[tmp.length - 1];
+        String newFileName = "t_" + videoId + '.' + tmp[tmp.length - 1];
         return store(thumbnail, "thumbnails", newFileName);
     }
 
