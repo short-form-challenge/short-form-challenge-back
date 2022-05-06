@@ -7,10 +7,13 @@ import com.leonduri.d7back.api.user.UserRepository;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
 import com.leonduri.d7back.api.video.dto.VideoSaveRequestDto;
 import com.leonduri.d7back.api.video.dto.VideoSimpleResponseDto;
+import com.leonduri.d7back.api.video.dto.VideoUpdateRequestDto;
 import com.leonduri.d7back.utils.FileSystemStorageService;
+import com.leonduri.d7back.utils.exception.CUnauthorizedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -36,14 +39,33 @@ public class VideoService {
         User u = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         Category c = categoryRepository.findById(requestDto.getCategoryId()).orElseThrow(Exception::new);
         LocalDateTime postedAt = LocalDateTime.now();
-        Video v = requestDto.toEntity(
-                fileSystemStorageService.storeVideo(video, u.getEmail(), postedAt),
-                fileSystemStorageService.storeThumbnail(thumbnail, u.getEmail(), postedAt),
-                u, c, postedAt
-        );
+        Video v = requestDto.toEntity(u, c);
         v = videoRepository.save(v);
-        v.setShowId(v.getId());
+
+        // after getting the video id
+        long vid = v.getId();
+        v.setFilePath(fileSystemStorageService.storeVideo(video, vid));
+        v.setThumbnailPath(fileSystemStorageService.storeThumbnail(thumbnail, vid));
+        v.setShowId(vid);
+
+        // update
         videoRepository.save(v);
+
+        return new VideoSimpleResponseDto(v);
+    }
+
+    public VideoSimpleResponseDto updateVideo(long userId, long videoId, VideoUpdateRequestDto requestDto,
+                                              MultipartFile video, MultipartFile thumbnail) throws Exception {
+        Video v = videoRepository.findById(videoId).orElseThrow(Exception::new);
+
+        // postedBy validation
+        if (v.getUser().isAdmin() && v.getUser().getId() != userId) throw new CUnauthorizedException();
+
+        if (!video.isEmpty()) fileSystemStorageService.storeVideo(video, videoId);
+        if (!thumbnail.isEmpty()) fileSystemStorageService.storeThumbnail(thumbnail, videoId);
+
+        v = requestDto.getUpdatedEntity(v);
+
         return new VideoSimpleResponseDto(v);
     }
 }

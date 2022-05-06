@@ -14,17 +14,14 @@ public class VideoSaveRequestDto {
     private int length;
     private long categoryId;
 
-    public Video toEntity(String contentFilePath, String thumbnailFilePath,
-                          User postedBy, Category category, LocalDateTime postedAt) {
+    public Video toEntity(User postedBy, Category category) {
         Video v = new Video();
-        v.setFilePath(contentFilePath);
-        v.setThumbnailPath(thumbnailFilePath);
         v.setTitle(this.title);
         v.setVideoLength(this.length);
         v.setUser(postedBy);
         v.setCategory(category);
-        v.setPostedAt(postedAt);
 
+        v.setPostedAt(LocalDateTime.now());
         v.setShowId(1L); // temporal value
         v.setHit(0L);
         v.setLikeCnt(0L);
