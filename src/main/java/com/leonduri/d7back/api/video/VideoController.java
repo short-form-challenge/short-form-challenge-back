@@ -39,6 +39,7 @@ public class VideoController {
         return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
     }
 
+//TODO    파일 삭제 추가 필요
     @ApiOperation(value = "비디오 삭제", notes = "비디오 id를 기준으로 비디오 하나를 삭제한다.")
     @DeleteMapping(value = "videos/{videoId}")
     public void deleteVideoById(
@@ -51,10 +52,10 @@ public class VideoController {
     @ApiOperation(value = "나의 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos/myVideos")
     public VideoListApiResponse<VideoListResponseDto> getMyVideoList(
-            @RequestBody @ApiParam(value = "특정 유저가 올린 마이 비디오 리스트", required = true) VideoListRequestDto videoListRequestDto) {
-        Long userId = videoListRequestDto.getUserId();
-        Long categoryId = videoListRequestDto.getCate();
-        Long page = videoListRequestDto.getPage();
+            @RequestParam("userId") @ApiParam(value = "유저 Id", required = true) Long userId,
+            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
+            @RequestParam("page") @ApiParam(value = "페이지 번호", required = true) Long page) {
+
         List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, page);
         List<VideoListResponseDto> ret = new ArrayList<>();
 
@@ -73,10 +74,9 @@ public class VideoController {
     @ApiOperation(value = "메인 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos")
     public VideoListApiResponse<VideoListResponseDto> getMainVideoList(
-            @RequestBody @ApiParam(value = "로그인을 한 특정 유저의 메인 비디오 리스트", required = true) VideoListRequestDto videoListRequestDto){
-        Long userId = videoListRequestDto.getUserId();
-        Long categoryId = videoListRequestDto.getCate();
-        Long page = videoListRequestDto.getPage();
+            @RequestParam("userId") @ApiParam(value = "유저 Id", required = true) Long userId,
+            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
+            @RequestParam("page") @ApiParam(value = "페이지 번호", required = true) Long page) {
 
         List<VideoListResponseDto> videoListResponseDtos = videoService.getMainVideoList(userId, categoryId, page);
         List<VideoListResponseDto> ret = new ArrayList<>();
@@ -96,10 +96,9 @@ public class VideoController {
 //    Login하지 않은 회원
     @ApiOperation(value = "로그아웃 회원의 메인 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos/anonymousUsers")
-    public VideoListApiResponse<AnonymousUserVideoListResponseDto> getAnonymousMainVideoList(@RequestBody @ApiParam(value = "로그인을 하지 않은 익명 유저의 메인 비디오 리스트", required = true)
-                                                                                                      AnonymousUserVideoListRequestDto requestDto){
-        Long categoryId = requestDto.getCate();
-        Long page = requestDto.getPage();
+    public VideoListApiResponse<AnonymousUserVideoListResponseDto> getAnonymousMainVideoList(
+            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
+            @RequestParam("page") @ApiParam(value = "페이지 번호", required = true) Long page) {
 
         List<AnonymousUserVideoListResponseDto> videoListResponseDtos = videoService.getAnonymousUserMain(categoryId, page);
         List<AnonymousUserVideoListResponseDto> ret = new ArrayList<>();
@@ -118,11 +117,10 @@ public class VideoController {
 
     @ApiOperation(value = "관심 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos/likeVideos")
-    public VideoListApiResponse<VideoListResponseDto> getLikedVideoList(@RequestBody @ApiParam(value = "특정 유저의 관심 비디오 리스트", required = true)
-                                                                                    VideoListRequestDto videoListRequestDto){
-        Long userId = videoListRequestDto.getUserId();
-        Long categoryId = videoListRequestDto.getCate();
-        Long page = videoListRequestDto.getPage();
+    public VideoListApiResponse<VideoListResponseDto> getLikedVideoList(
+            @RequestParam("userId") @ApiParam(value = "유저 Id", required = true) Long userId,
+            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
+            @RequestParam("page") @ApiParam(value = "페이지 번호", required = true) Long page){
 
         List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, categoryId, page);
         List<VideoListResponseDto> ret = new ArrayList<>();
