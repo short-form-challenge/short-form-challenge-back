@@ -64,6 +64,13 @@ public class VideoService {
     }
 
     public List<VideoListResponseDto> getLikedVideoList(Long userId, Long categoryId, Long page) {
-        return videoRepository.getLikedVideoList(userId, categoryId, (page - 1) * (count -1), count).stream().map(VideoListResponseDto::new).collect(Collectors.toList());
+        User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        List<VideoListResponseDto> ret = new ArrayList<>();
+        List<Video> vList = videoRepository.getLikedVideoList(userId, categoryId, (page - 1) * (count -1), count);
+        for (int i = 0; i < vList.size(); i++) {
+            ret.add(new VideoListResponseDto(vList.get(i), requestUser));
+        }
+
+        return ret;
     }
 }
