@@ -2,6 +2,7 @@ package com.leonduri.d7back.api.video;
 
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.category.Category;
+import io.swagger.annotations.Info;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,4 +61,5 @@ public class Video {
 
     @Column(name = "video_length", nullable = false)
     private Integer videoLength;
+
 }

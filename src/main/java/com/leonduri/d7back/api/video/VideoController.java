@@ -1,28 +1,24 @@
 package com.leonduri.d7back.api.video;
 
-import com.fasterxml.jackson.annotation.OptBoolean;
-import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
-import com.leonduri.d7back.utils.VideoApiResponse;
+import com.leonduri.d7back.api.likes.Likes;
+import com.leonduri.d7back.api.likes.LikesRepository;
+import com.leonduri.d7back.api.video.dto.*;
+import com.leonduri.d7back.utils.SingleApiResponse;
 import com.leonduri.d7back.utils.VideoListApiResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import lombok.Getter;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Api(tags = {"2. Video"})
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class VideoController {
 //    private final VideoRepository videoRepository;
     private final VideoService videoService;
+    private final LikesRepository likesRepository;
+
 
 //    @ApiOperation(value = "비디오 조회", notes = "모든 비디오를 조회한다.")
 //    @GetMapping(value = "/videos")
@@ -36,14 +32,83 @@ public class VideoController {
 //        return videoRepository.findById(videoId);
 //    }
 
-    @ApiOperation(value = "비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
-    @GetMapping(value = "/videos")
-    public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(value = "유저 Id", required = true) @RequestParam("userId") Long userId,
-                                                                   @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
-                                                                   @ApiParam(value = "페이지 번호", required = true) @RequestParam("page") Long page){
-        List<VideoListResponseDto> videoListResponseDtos = videoService.getVideoList(userId, categoryId, page);
+//    userId 임시
+    @GetMapping(value = "/videos/{videoId}/{userId}")
+    public SingleApiResponse<VideoDetailResponseDto> getVideoById(
+            @PathVariable long videoId, @PathVariable long userId) throws Exception {
+        videoService.upHit(videoId);
+        return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
+    }
+
+    //    userId 임시
+    @ApiOperation(value = "like 증가", notes = "해당 비디오의 like를 증가시킨다.")
+    @PostMapping(value = "/videos/upLikes/{videoId}/{userId}")
+    public SingleApiResponse<VideoLikesResponseDto> updateUpVideoLikes(
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
+            @PathVariable @ApiParam(value = "유저 Id", required = true)long userId) throws Exception {
+        videoService.upLikeCnt(videoId, userId);
+        return SingleApiResponse.success(videoService.findById(videoId, userId));
+    }
+
+    @ApiOperation(value = "like 감소", notes = "해당 비디오의 like를 감소시킨다.")
+    @PostMapping(value = "/videos/downLikes/{videoId}/{userId}")
+    public SingleApiResponse<VideoLikesResponseDto> updateDownVideoLikes(
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
+            @PathVariable @ApiParam(value = "유저Id", required = true) long userId) throws Exception {
+        videoService.downLikeCnt(videoId, userId);
+
+        return SingleApiResponse.success(videoService.findById(videoId, userId));
+    }
+
+
+//   GetMapping api 이름
+    @ApiOperation(value = "나의 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
+    @GetMapping(value = "/videos/myVideos")
+    public VideoListApiResponse<VideoListResponseDto> getMyVideoList(
+            @RequestBody @ApiParam(value = "특정 유저가 올린 마이 비디오 리스트", required = true) VideoListRequestDto videoListRequestDto) {
+        Long userId = videoListRequestDto.getUserId();
+        Long categoryId = videoListRequestDto.getCate();
+        Long page = videoListRequestDto.getPage();
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, page);
 
         return VideoListApiResponse.success(videoListResponseDtos);
     }
-//    RequestDto 만들기
+
+    @ApiOperation(value = "메인 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
+    @GetMapping(value = "/videos")
+    public VideoListApiResponse<VideoListResponseDto> getMainVideoList(
+            @RequestBody @ApiParam(value = "로그인을 한 특정 유저의 메인 비디오 리스트", required = true) VideoListRequestDto videoListRequestDto){
+        Long userId = videoListRequestDto.getUserId();
+        Long categoryId = videoListRequestDto.getCate();
+        Long page = videoListRequestDto.getPage();
+
+        List<VideoListResponseDto> mainVideoListResponseDtos = videoService.getMainVideoList(userId, categoryId, page);
+        return VideoListApiResponse.success(mainVideoListResponseDtos);
+    }
+
+//    Login하지 않은 회원
+    @ApiOperation(value = "로그아웃 회원의 메인 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
+    @GetMapping(value = "/videos/anonymousUsers")
+    public VideoListApiResponse<AnonymousUserVideoListResponseDto> getAnonymousMainVideoList(@RequestBody @ApiParam(value = "로그인을 하지 않은 익명 유저의 메인 비디오 리스트", required = true)
+                                                                                                      AnonymousUserVideoListRequestDto requestDto){
+        Long categoryId = requestDto.getCate();
+        Long page = requestDto.getPage();
+
+        List<AnonymousUserVideoListResponseDto> videoList = videoService.getAnonymousUserMain(categoryId, page);
+
+        return VideoListApiResponse.success(videoList);
+    }
+
+    @ApiOperation(value = "관심 비디오 리스트 조회", notes = "비디오를 6개씩 조회한다.")
+    @GetMapping(value = "/videos/likeVideos")
+    public VideoListApiResponse<VideoListResponseDto> getLikedVideoList(@RequestBody @ApiParam(value = "특정 유저의 관심 비디오 리스트", required = true)
+                                                                                    VideoListRequestDto videoListRequestDto){
+        Long userId = videoListRequestDto.getUserId();
+        Long categoryId = videoListRequestDto.getCate();
+        Long page = videoListRequestDto.getPage();
+
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, categoryId, page);
+
+        return VideoListApiResponse.success(videoListResponseDtos);
+    }
 }

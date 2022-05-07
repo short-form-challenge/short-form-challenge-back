@@ -8,37 +8,31 @@ import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-public class VideoListResponseDto {
+public class VideoDetailResponseDto {
     public Long id;
     public Long showId;
     public String title;
-    public String thumbnailPath;
+    public String filePath;
+    public Long hit;
+    public LocalDateTime postedAt;
     public Long likeCnt;
     public Boolean isLiked = false;
     UserSimpleResponseDto posted_by;
     public Category category;
 
-    public VideoListResponseDto(Video video) {
+    public VideoDetailResponseDto(Video video, User requestUser) {
         this.id = video.getId();
         this.showId = video.getShowId();
         this.title = video.getTitle();
-        this.thumbnailPath = video.getThumbnailPath();
-        this.likeCnt = video.getLikeCnt();
-
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
-        this.posted_by = userSimpleResponseDto;
-        this.category = video.getCategory();
-    }
-
-    public VideoListResponseDto(Video video, User requestUser) {
-        this.id = video.getId();
-        this.showId = video.getShowId();
-        this.title = video.getTitle();
-        this.thumbnailPath = video.getThumbnailPath();
+        this.filePath = video.getFilePath();
+        this.hit = video.getHit();
+        this.postedAt = video.getPostedAt();
         this.likeCnt = video.getLikeCnt();
 
         UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
