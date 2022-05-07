@@ -2,6 +2,7 @@ package com.leonduri.d7back.utils;
 
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
+import com.leonduri.d7back.utils.exception.CVideoNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
     protected ApiResponse defaultException(HttpServletRequest request, Exception e) {
+
         return ApiResponse.fail();
     }
 
@@ -31,5 +33,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse emailSignInFailed(HttpServletRequest request, CEmailSignInFailedException e) {
         return ApiResponse.fail(CEmailSignInFailedException.errorMsg);
+    }
+
+    @ExceptionHandler(CVideoNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse videoNotFound(HttpServletRequest request, CVideoNotFoundException e) {
+        return ApiResponse.fail(CVideoNotFoundException.errorMsg);
     }
 }

@@ -2,6 +2,7 @@ package com.leonduri.d7back.api.likes;
 
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.video.Video;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,4 +26,9 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "liked_on")
     private Video video;
+
+    public Likes(User user, Video video) {
+        this.user = user;
+        this.video = video;
+    }
 }
