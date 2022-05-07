@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +28,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     private final long tokenValidMs = 1000L * 60 * 60; // 한시간
-    private final long refreshTokenValidMs = 1000L * 60 * 60 * 24 * 14; // 2주
+    private final long refreshTokenValidMs = 1000L * 60 * 60 * 24; // 하루
 
     private final UserDetailsService userDetailsService;
     // UserDetails: Spring security에서 사용자의 정보를 담는 인터페이스
@@ -91,8 +90,12 @@ public class JwtTokenProvider {
     }
 
     // get JWT from the header of a request
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+    public String resolveAccessToken(HttpServletRequest request) {
+        return request.getHeader("X-AUTH-TOKEN");
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        return request.getHeader("REFRESH-TOKEN");
     }
 
     public boolean validateToken(String token) {

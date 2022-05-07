@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @Secured("ROLE_USER")
-    @ApiImplicitParam(name = "Authorization", value = "accessToken",
+    @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "accessToken",
                     required = true, dataType = "String", paramType = "header")
     @ApiOperation(value = "유저 본인의 프로필 수정", notes = "로그인 한 유저의 프로필을 수정한다.",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -64,8 +64,8 @@ public class UserController {
             @ApiParam(value = "프로필 사진", required = false)
             @RequestPart(value = "profileFile", required = false)
                     MultipartFile profileFile,
-            @ApiParam(value = "수정할 닉네임", required = false) @RequestParam String nickname) throws Exception{
-        String jwt = jwtTokenProvider.resolveToken(request);
+            @ApiParam(value = "수정할 닉네임", required = false) @RequestParam String nickname) {
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
         return SingleApiResponse.success(service.updateUser(
                 Long.parseLong(jwtTokenProvider.getUserPk(jwt)), profileFile, nickname)
