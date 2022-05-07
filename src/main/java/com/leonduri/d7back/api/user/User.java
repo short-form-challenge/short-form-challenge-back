@@ -55,11 +55,10 @@ public class User implements UserDetails {
     private LocalDateTime lastLogin;
 
     @OneToMany(
-            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             mappedBy = "user"
     )
-    Set<Challenge> challenges;
+    List<Challenge> challenges;
     // reference
     // https://perfectacle.github.io/2019/05/01/hibernate-multiple-bag-fetch-exception/
 

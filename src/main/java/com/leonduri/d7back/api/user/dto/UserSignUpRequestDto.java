@@ -2,14 +2,18 @@ package com.leonduri.d7back.api.user.dto;
 
 import com.leonduri.d7back.api.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
+@Getter
+@Setter
 public class UserSignUpRequestDto {
-    String email;
-    String password;
-    String nickname;
+    private String email;
+    private String password;
+    private String nickname;
 
     public User toEntity() {
         User user = new User();
