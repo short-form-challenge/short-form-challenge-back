@@ -45,7 +45,12 @@ public class VideoService {
         return videoRepository.upHit(videoId);
     }
 
-//    like를 눌렀는지 안 눌렀는지 판단 -> 프론트? 백?
+    public void deleteVideoById(Long videoId) {
+        videoRepository.deleteById(videoId);
+    }
+  
+    //        Exception 추가 필요
+    //    like를 눌렀는지 안 눌렀는지 판단 -> 프론트? 백?
     public void upLikeCnt(Long videoId, Long userId) throws Exception {
         videoRepository.upLikeCnt(videoId);
         User likedBy = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
@@ -66,9 +71,6 @@ public class VideoService {
         List<VideoListResponseDto> ret = new ArrayList<>();
         List<Video> vList = videoRepository.getMyVideoList(userId, categoryId, (page - 1) * (count -1), count);
         for (int i = 0; i < vList.size(); i++) {
-            if (i == 6) {
-                break;
-            }
             ret.add(new VideoListResponseDto(vList.get(i), requestUser));
         }
 
@@ -80,9 +82,6 @@ public class VideoService {
         List<VideoListResponseDto> ret = new ArrayList<>();
         List<Video> vList = videoRepository.getMainVideoList(categoryId, (page - 1) * (count -1), count);
         for (int i = 0; i < vList.size(); i++) {
-            if (i == 6) {
-                break;
-            }
             ret.add(new VideoListResponseDto(vList.get(i), requestUser));
         }
 
@@ -94,6 +93,13 @@ public class VideoService {
     }
 
     public List<VideoListResponseDto> getLikedVideoList(Long userId, Long categoryId, Long page) {
-        return videoRepository.getLikedVideoList(userId, categoryId, (page - 1) * (count -1), count).stream().map(VideoListResponseDto::new).collect(Collectors.toList());
+        User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+        List<VideoListResponseDto> ret = new ArrayList<>();
+        List<Video> vList = videoRepository.getLikedVideoList(userId, categoryId, (page - 1) * (count -1), count);
+        for (int i = 0; i < vList.size(); i++) {
+            ret.add(new VideoListResponseDto(vList.get(i), requestUser));
+        }
+
+        return ret;
     }
 }

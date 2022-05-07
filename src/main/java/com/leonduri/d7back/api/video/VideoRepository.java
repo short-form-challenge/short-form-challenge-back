@@ -18,11 +18,17 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     @Override
     Optional<Video> findById(Long aLong);
 
+//    비디오 조회수 증가 API
     @Modifying
     @Transactional
     @Query(value = "UPDATE Video set Video.hit = Video.hit + 1 where Video.id = :videoId", nativeQuery = true)
     int upHit(@Param("videoId") Long videoId);
 
+//    비디오 삭제 API
+    @Override
+    void deleteById(Long aLong);
+
+    //    비디오 리스트 조회 API
     @Modifying
     @Transactional
     @Query(value = "UPDATE Video set Video.like_cnt = Video.like_cnt + 1 where Video.id = :videoId", nativeQuery = true)
