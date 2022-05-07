@@ -29,6 +29,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     private final long tokenValidMs = 1000L * 60 * 60; // 한시간
+    private final long refreshTokenValidMs = 1000L * 60 * 60 * 24 * 14; // 2주
 
     private final UserDetailsService userDetailsService;
     // UserDetails: Spring security에서 사용자의 정보를 담는 인터페이스
@@ -50,6 +51,22 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMs))
+                // .signWith(SignatureAlgorithm.ES256, secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
+    public String createRefreshToken(String userPk, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(userPk);
+        // claim: a piece of information asserted about a subject
+        // name, value 싸으로 구성되며, 특정 정보에 대해 특정 주체가 발급헀음을 확인하는 정보
+        // 서명 또는 암호화하여 사용됨.
+        claims.put("roles", roles);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidMs))
                 // .signWith(SignatureAlgorithm.ES256, secretKey)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
