@@ -55,26 +55,31 @@ import java.util.Set;
 //        return produces;
 //    }
 //}
-
+@Configuration
 public class SwaggerConfiguration implements WebMvcConfigurer {
-    private final String baseUrl;
 
-    public SwaggerConfiguration(String baseUrl) {
-        this.baseUrl = "";
-    }
+    private static final String[] CLASSPATH_PATH_PATTERNS = {"swagger-ui.html", "/webjars/**"};
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+            "classpath:/META-INF/resources/", "classpath:/META-INF/resources/webjars/"
+    };
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
-        registry.
-                addResourceHandler(baseUrl)
-                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-                .resourceChain(false);
+        registry.addResourceHandler(CLASSPATH_PATH_PATTERNS).addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+//        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
+//        registry.
+//                addResourceHandler(baseUrl)
+//                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+//                .resourceChain(false);
+
     }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(baseUrl)
-                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
+//        registry.addViewController("/")
+//                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
+        registry.addViewController("/").setViewName("redirect:/swagger-ui/");
+
     }
 }
