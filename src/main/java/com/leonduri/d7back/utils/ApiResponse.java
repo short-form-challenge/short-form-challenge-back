@@ -31,17 +31,38 @@ public class ApiResponse {
         this.setMsg("정의되지 않은 예외가 발생했습니다.");
     }
 
-    protected static ApiResponse fail() {
+    public static ApiResponse success() {
+        ApiResponse response = new ApiResponse();
+        response.setSuccessResponse();
+        return response;
+    }
+
+    public static ApiResponse success(String msg) {
+        ApiResponse response = new ApiResponse();
+        response.setSuccessResponse();
+        return response;
+    }
+
+    public static ApiResponse fail() {
         ApiResponse response = new ApiResponse();
         response.setFailResponse();
         return response;
     }
 
     // overloading
-    protected static ApiResponse fail(String msg) {
+    public static ApiResponse fail(String msg) {
         ApiResponse response = new ApiResponse();
         response.setFailResponse();
         response.setMsg(msg);
+        return response;
+    }
+
+    // overloading
+    public static ApiResponse fail(String msg, int code) {
+        ApiResponse response = new ApiResponse();
+        response.setFailResponse();
+        response.setMsg(msg);
+        response.setCode(code);
         return response;
     }
 }
