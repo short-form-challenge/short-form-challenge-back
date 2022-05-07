@@ -39,7 +39,6 @@ public class VideoController {
 //    private final VideoRepository videoRepository;
     private final VideoService videoService;
     private final LikesRepository likesRepository;
-    private final VideoService videoService;
     private final JwtTokenProvider jwtTokenProvider;
 
     //    userId 임시
@@ -109,8 +108,19 @@ public class VideoController {
     public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(value = "유저 Id", required = true) @RequestParam("userId") Long userId,
                                                                    @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
                                                                    @ApiParam(value = "페이지 번호", required = true) @RequestParam("page") Long page) {
-        List<VideoListResponseDto> videoListResponseDtos = videoService.getVideoList(userId, categoryId, page);
-  
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMainVideoList(userId, categoryId, page);
+
+        List<VideoListResponseDto> ret = new ArrayList<>();
+
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != 6) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == 6) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
         return VideoListApiResponse.success(ret);
     }
 

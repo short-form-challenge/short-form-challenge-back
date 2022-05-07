@@ -39,7 +39,6 @@ public class VideoService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final FileSystemStorageService fileSystemStorageService;
-    private final UserRepository userRepository;
     private final LikesRepository likesRepository;
 
     Long count = 7L;
