@@ -58,7 +58,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CInvalidJwtTokenException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse invalidJwtToken(HttpServletRequest request, CInvalidJwtTokenException e) {
-        return ApiResponse.fail(CInvalidJwtTokenException.errorMsg);
+        return ApiResponse.fail(CInvalidJwtTokenException.errorMsg, CInvalidJwtTokenException.code);
     }
 
     @ExceptionHandler(MissingServletRequestPartException.class)
