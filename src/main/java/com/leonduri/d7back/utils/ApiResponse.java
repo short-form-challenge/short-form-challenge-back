@@ -40,6 +40,7 @@ public class ApiResponse {
     public static ApiResponse success(String msg) {
         ApiResponse response = new ApiResponse();
         response.setSuccessResponse();
+        response.setMsg(msg);
         return response;
     }
 
