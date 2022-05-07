@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class VideoListResponseDto {
+public class AnonymousUserVideoListResponseDto {
     public Long id;
     public Long showId;
     public String title;
@@ -22,19 +22,7 @@ public class VideoListResponseDto {
     UserSimpleResponseDto posted_by;
     public Category category;
 
-    public VideoListResponseDto(Video video) {
-        this.id = video.getId();
-        this.showId = video.getShowId();
-        this.title = video.getTitle();
-        this.thumbnailPath = video.getThumbnailPath();
-        this.likeCnt = video.getLikeCnt();
-
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
-        this.posted_by = userSimpleResponseDto;
-        this.category = video.getCategory();
-    }
-
-    public VideoListResponseDto(Video video, User requestUser) {
+    public AnonymousUserVideoListResponseDto(Video video) {
         this.id = video.getId();
         this.showId = video.getShowId();
         this.title = video.getTitle();
@@ -44,13 +32,6 @@ public class VideoListResponseDto {
         UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
         this.posted_by = userSimpleResponseDto;
 
-        List<Likes> likesList = requestUser.getLikesList();
-        for(Likes like : likesList){
-            if (like.getVideo().getId() == video.getId()) {
-                this.isLiked = true;
-                break;
-            }
-        }
         this.category = video.getCategory();
     }
 }

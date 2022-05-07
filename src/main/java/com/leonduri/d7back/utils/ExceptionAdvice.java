@@ -3,6 +3,9 @@ package com.leonduri.d7back.utils;
 import com.leonduri.d7back.utils.exception.*;
 import io.jsonwebtoken.MalformedJwtException;
 import io.swagger.annotations.ApiImplicitParam;
+import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
+import com.leonduri.d7back.utils.exception.CUserNotFoundException;
+import com.leonduri.d7back.utils.exception.CVideoNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -24,6 +27,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
     protected ApiResponse defaultException(HttpServletRequest request, Exception e) {
+
         return ApiResponse.fail();
     }
 
@@ -87,4 +91,9 @@ public class ExceptionAdvice {
         return ApiResponse.fail(CUnauthorizedException.errorMsg);
     }
 
+    @ExceptionHandler(CVideoNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse videoNotFound(HttpServletRequest request, CVideoNotFoundException e) {
+        return ApiResponse.fail(CVideoNotFoundException.errorMsg);
+    }
 }
