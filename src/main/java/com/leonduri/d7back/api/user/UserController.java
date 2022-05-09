@@ -58,7 +58,7 @@ public class UserController {
     @ApiOperation(value = "유저 본인의 프로필 수정", notes = "로그인 한 유저의 프로필을 수정한다.",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    @PutMapping(value = "/users/profile/")
+    @PutMapping(value = "/users/profile")
     public SingleApiResponse<UserUpdateResponseDto> updateUser(
             HttpServletRequest request,
             @ApiParam(value = "프로필 사진", required = false)

@@ -1,16 +1,9 @@
 package com.leonduri.d7back.api.video.dto;
-
-import com.leonduri.d7back.api.category.Category;
 import com.leonduri.d7back.api.user.User;
-import com.leonduri.d7back.api.video.Video;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -48,3 +41,4 @@ public class VideoListRequestDto {
     }
 
 }
+

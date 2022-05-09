@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryRepository categoryRepository;
 
-    @ApiOperation(value = "카테고리 조회", notes = "모든 카테고리르 조회한다")
+    @ApiOperation(value = "카테고리 조회", notes = "모든 카테고리를 조회한다")
     @GetMapping(value = "/categories")
     public List<Category> categoryList() {
         return categoryRepository.findAll();
