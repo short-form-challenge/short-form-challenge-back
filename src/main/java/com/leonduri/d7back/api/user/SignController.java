@@ -5,9 +5,7 @@ import com.leonduri.d7back.config.security.JwtTokenProvider;
 import com.leonduri.d7back.utils.ApiResponse;
 //import com.leonduri.d7back.utils.RedisService;
 import com.leonduri.d7back.utils.SingleApiResponse;
-import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
-import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
-import com.leonduri.d7back.utils.exception.CUserNotFoundException;
+import com.leonduri.d7back.utils.exception.*;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,7 +64,7 @@ public class SignController {
     public ApiResponse validateEmail(
             @ApiParam(required = true) @PathParam(value = "email") String email) {
         if (userService.validateEmail(email)) return ApiResponse.success("이메일 형식에 맞다면 사용 가능한 이메일입니다.");
-        return ApiResponse.fail("이미 사용 중인 이메일입니다.");
+        throw new CEmailInvalidException();
     }
 
     @ApiOperation(value = "닉네임 중복 검사", notes = "닉네임 중복을 검사한다.")
@@ -74,7 +72,7 @@ public class SignController {
     public ApiResponse validateNickname(
             @ApiParam(required = true) @PathParam(value = "nickname") String nickname) {
         if (userService.validateNickname(nickname)) return ApiResponse.success("닉네임 형식에 맞다면 사용 가능한 닉네임입니다.");
-        return ApiResponse.fail("이미 사용 중인 닉네임입니다.");
+        throw new CNicknameInvalidException();
     }
 
     // TODO spring security 확인
