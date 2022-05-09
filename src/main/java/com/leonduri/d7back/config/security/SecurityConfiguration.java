@@ -1,6 +1,7 @@
 package com.leonduri.d7back.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -17,6 +21,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-resource",
+            "/swagger-resource/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/javainuse-openapi/**",
+            "/swagger-resources/configuration/ui",
+            "/swagger-resources/configuration/security"
+    };
 
     @Bean
     @Override
@@ -26,18 +49,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.httpBasic().disable() // for skipping spring security login page
-                .csrf().disable()   // no need for csrf in rest api
-                .sessionManagement().sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS) // no need for session, only jwt needed
-                .and().authorizeRequests()
-                .antMatchers("/*/signin", "/*/signup").permitAll()
-                .antMatchers("/*/admin/**").hasRole("ADMIN")
+//        httpSecurity
+//                .httpBasic().disable() // for skipping spring security login page
+//                .csrf().disable()   // no need for csrf in rest api
+//                .sessionManagement().sessionCreationPolicy(
+//                        SessionCreationPolicy.STATELESS) // no need for session, only jwt needed
+//                .and()
+//                .authorizeRequests()
+//                    .antMatchers("/*/signin", "/*/signup").permitAll()
+//                    .antMatchers("/", "/swagger-resources/**", "/swagger**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+//                    .antMatchers("/*/admin/**").hasRole("ADMIN")
+//                    .anyRequest().permitAll()
+//                .and()
+//                .addFilterBefore(
+//                        new JwtAuthenticationFilter(jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class
+//                );
+
+        httpSecurity.authorizeRequests()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
+                .antMatchers("/users").permitAll()
                 .anyRequest().permitAll()
-                .and().addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .and()
+                .csrf().disable();
         /*
          hasIpAddress(ip) - 접근자의 IP 주소가 매칭 하는지 확인한다.
          hasRole(role) - 역할이 부여된 권한(Granted Authority)과 일치하는지 확인한다.
@@ -52,10 +86,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
          */
     }
 
-//    @Override
-//    public void configure(WebSecurity web) {
-//        web.ignoring().antMatchers(
-//                "/v2/api-docs", "/swagger-resources/**",
-//                "/swagger-ui.html", "/webjars/**", "/swagger/**");
-//    }
+    private static final String[] DOC_URLS = {
+            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
+    };
+
+    @Override
+    public void configure(WebSecurity webSecurity) throws Exception {
+        webSecurity.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .and().ignoring().antMatchers(DOC_URLS)
+                .and().httpFirewall(allowUrlEncodedSlashHttpFirewall());
+    }
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
+    }
 }

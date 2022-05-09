@@ -67,12 +67,12 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
 
     @Bean
     public Docket swaggerApi() {
-        return new Docket(DocumentationType.OAS_30).apiInfo(swaggerInfo()).select()
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(swaggerInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage("com.leonduri.d7back.api"))
                 // basePackage : controller 하단의 Controller 내용을 읽어 mapping된 resource들을 문서화 시킴
                 .paths(PathSelectors.any())
-                .build()
-                .useDefaultResponseMessages(false); // 기본으로 세팅되는 200,401,403,404 메시지 표시 x
+                .build();
+//                .useDefaultResponseMessages(false); // 기본으로 세팅되는 200,401,403,404 메시지 표시 x
     }
 
     private ApiInfo swaggerInfo() {
@@ -83,22 +83,21 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
                 .build();
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(CLASSPATH_PATH_PATTERNS).addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
-//        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
-//        registry.
-//                addResourceHandler(baseUrl)
-//                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-//                .resourceChain(false);
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler(CLASSPATH_PATH_PATTERNS).addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+////        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
+////        registry.
+////                addResourceHandler(baseUrl)
+////                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+////                .resourceChain(false);
+//
+//    }
 
-    }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/")
-//                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
-        registry.addViewController("/").setViewName("redirect:/swagger-ui/");
-
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+////        registry.addViewController("/")
+////                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
+//        registry.addViewController("/").setViewName("redirect:/swagger-ui/index.html");
+//    }
 }
