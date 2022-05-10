@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +28,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     private final long tokenValidMs = 1000L * 60 * 60; // 한시간
+    private final long refreshTokenValidMs = 1000L * 60 * 60 * 24; // 하루
 
     private final UserDetailsService userDetailsService;
     // UserDetails: Spring security에서 사용자의 정보를 담는 인터페이스
@@ -55,6 +55,22 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String createRefreshToken(String userPk, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(userPk);
+        // claim: a piece of information asserted about a subject
+        // name, value 싸으로 구성되며, 특정 정보에 대해 특정 주체가 발급헀음을 확인하는 정보
+        // 서명 또는 암호화하여 사용됨.
+        claims.put("roles", roles);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidMs))
+                // .signWith(SignatureAlgorithm.ES256, secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
     // get user pk from jwt
     public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey)
@@ -74,8 +90,12 @@ public class JwtTokenProvider {
     }
 
     // get JWT from the header of a request
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+    public String resolveAccessToken(HttpServletRequest request) {
+        return request.getHeader("X-AUTH-TOKEN");
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        return request.getHeader("REFRESH-TOKEN");
     }
 
     public boolean validateToken(String token) {

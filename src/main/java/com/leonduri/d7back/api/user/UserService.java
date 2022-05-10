@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepo;
-    private final ChallengeRepository challengeRepo;
+    private final UserRepository userRepository;
+    private final ChallengeRepository challengeRepository;
     private final FileSystemStorageService storageService;
 
     Long count = 3L;
@@ -28,25 +28,25 @@ public class UserService {
     public List<UserSimpleResponseDto> findAllUser() {
         // {CollectionInstance}.stream().map({method_to_be_mapped})
         // : same function with "map function in python"
-        return userRepo.findAll().stream().map(UserSimpleResponseDto::new).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserSimpleResponseDto::new).collect(Collectors.toList());
     }
 
     public UserSimpleResponseDto findUserById(Long userId) throws Exception {
-        return new UserSimpleResponseDto(userRepo.findById(userId)
+        return new UserSimpleResponseDto(userRepository.findById(userId)
                 .orElseThrow(CUserNotFoundException::new));
     }
 
     public UserSimpleResponseDto findUserByEmail(String email) throws Exception {
-        return new UserSimpleResponseDto(userRepo.findByEmail(email)
+        return new UserSimpleResponseDto(userRepository.findByEmail(email)
                 .orElseThrow(CEmailSignInFailedException::new));
     }
 
     public UserSimpleResponseDto save(UserSignUpRequestDto requestDto) {
-        return new UserSimpleResponseDto(userRepo.save(requestDto.toEntity()));
+        return new UserSimpleResponseDto(userRepository.save(requestDto.toEntity()));
     }
 
     public UserProfileResponseDto getUserProfile(Long userId) throws Exception {
-         User user = userRepo.findById(userId).orElseThrow(CUserNotFoundException::new);
+         User user = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
 
          // challenge update
         List<Challenge> challenges = user.getChallenges();
@@ -55,20 +55,21 @@ public class UserService {
             c.setDayCnt(c.getDayCnt() % 7);
             // challenge failed
             if (!LocalDate.now().minusDays(1L).isAfter(c.getLastChallengedAt())) c.setDayCntZero();
-            challengeRepo.save(c);
+            challengeRepository.save(c);
         }
         return new UserProfileResponseDto(user);
     }
 
     public UserUpdateResponseDto updateUser(long userId, MultipartFile profileFile, String nickname) {
-        User user = userRepo.findById(userId).orElseThrow(CUserNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         if (profileFile != null) user.setProfileFilePath(storageService.storeProfile(profileFile, user.getEmail()));
         if (nickname != null) user.setNickname(nickname);
-        userRepo.save(user);
+        userRepository.save(user);
         return new UserUpdateResponseDto(user);
     }
 
-//    Admin API
+
+  //    Admin API
     public List<AdminUserResponseDto> findAdminUserList(Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return userRepo.findAll(pageRequest).stream().map(AdminUserResponseDto::new).collect(Collectors.toList());
@@ -76,5 +77,15 @@ public class UserService {
 
     public Long getCountAllUsers() {
         return userRepo.countAllUser();
+    }
+  
+    public boolean validateEmail(String email) {
+        User u = userRepository.findByEmail(email).orElse(new User(-1L));
+        return u.getId() == -1L;
+    }
+
+    public boolean validateNickname(String nickname) {
+        User u = userRepository.findByNickname(nickname).orElse(new User(-1L));
+        return u.getId() == -1L;
     }
 }

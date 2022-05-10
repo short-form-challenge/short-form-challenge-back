@@ -22,6 +22,8 @@ public class VideoSaveRequestDto {
         v.setCategory(category);
 
         v.setPostedAt(LocalDateTime.now());
+        v.setFilePath("");  // temporarily
+        v.setThumbnailPath(""); // temporarily
         v.setShowId(1L); // temporal value
         v.setHit(0L);
         v.setLikeCnt(0L);

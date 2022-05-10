@@ -56,25 +56,48 @@ import java.util.Set;
 //    }
 //}
 
+
+@Configuration
 public class SwaggerConfiguration implements WebMvcConfigurer {
-    private final String baseUrl;
 
-    public SwaggerConfiguration(String baseUrl) {
-        this.baseUrl = "";
+    private static final String[] CLASSPATH_PATH_PATTERNS = {"swagger-ui.html", "/webjars/**"};
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+            "classpath:/META-INF/resources/", "classpath:/META-INF/resources/webjars/"
+    };
+
+    @Bean
+    public Docket swaggerApi() {
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(swaggerInfo()).select()
+                .apis(RequestHandlerSelectors.basePackage("com.leonduri.d7back.api"))
+                // basePackage : controller 하단의 Controller 내용을 읽어 mapping된 resource들을 문서화 시킴
+                .paths(PathSelectors.any())
+                .build();
+//                .useDefaultResponseMessages(false); // 기본으로 세팅되는 200,401,403,404 메시지 표시 x
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
-        registry.
-                addResourceHandler(baseUrl)
-                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-                .resourceChain(false);
+    private ApiInfo swaggerInfo() {
+        return new ApiInfoBuilder()
+                .title("Ddaychill API Documentation")
+                .description("서버 API 문서입니다.")
+//                .version("1")
+                .build();
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(baseUrl)
-                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler(CLASSPATH_PATH_PATTERNS).addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+////        String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
+////        registry.
+////                addResourceHandler(baseUrl)
+////                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+////                .resourceChain(false);
+//
+//    }
+
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+////        registry.addViewController("/")
+////                .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
+//        registry.addViewController("/").setViewName("redirect:/swagger-ui/index.html");
+//    }
 }

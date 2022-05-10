@@ -20,5 +20,7 @@ public class VideoSimpleResponseDto {
         this.id = video.getId();
         this.title = video.getTitle();
         this.postedBy = video.getUser().getId();
+        this.contentFilePath = video.getFilePath();
+        this.thumbnailFilePath = video.getThumbnailPath();
     }
 }

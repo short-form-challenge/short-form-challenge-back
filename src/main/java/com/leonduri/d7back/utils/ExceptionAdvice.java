@@ -58,7 +58,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CInvalidJwtTokenException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse invalidJwtToken(HttpServletRequest request, CInvalidJwtTokenException e) {
-        return ApiResponse.fail(CInvalidJwtTokenException.errorMsg);
+        return ApiResponse.fail(CInvalidJwtTokenException.errorMsg, CInvalidJwtTokenException.code);
     }
 
     @ExceptionHandler(MissingServletRequestPartException.class)
@@ -95,5 +95,17 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse videoNotFound(HttpServletRequest request, CVideoNotFoundException e) {
         return ApiResponse.fail(CVideoNotFoundException.errorMsg);
+    }
+
+    @ExceptionHandler(CEmailInvalidException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse emailInvalid(HttpServletRequest request, CEmailInvalidException e) {
+        return ApiResponse.fail(CEmailInvalidException.errorMsg);
+    }
+
+    @ExceptionHandler(CNicknameInvalidException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse nicknameInvalid(HttpServletRequest request, CNicknameInvalidException e) {
+        return ApiResponse.fail(CNicknameInvalidException.errorMsg);
     }
 }
