@@ -1,5 +1,6 @@
 package com.leonduri.d7back.api.user;
 
+import com.leonduri.d7back.api.user.dto.AdminUserResponseDto;
 import com.leonduri.d7back.api.user.dto.UserProfileResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.user.dto.UserUpdateResponseDto;
@@ -72,4 +73,10 @@ public class UserController {
         );
     }
 
+    @ApiOperation(value = "Admin 페이지 유저의 리스트 조회", notes = "Admin 페이지에서 모든 유저를 조회한다.")
+    @GetMapping(value = "/admin/users/{page}")
+    public ListApiResponse<AdminUserResponseDto> getAdminUserList(@PathVariable Integer page) {
+        Long countUser = service.getCountAllUsers();
+        return ListApiResponse.adminSuccess(service.findAdminUserList(page, 10), countUser);
+    }
 }

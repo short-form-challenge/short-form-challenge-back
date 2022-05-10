@@ -22,6 +22,9 @@ public class VideoApiResponse {
     @ApiModelProperty(value = "마지막 여부")
     private boolean isLast;
 
+    @ApiModelProperty(value = "비디오 전체 갯수")
+    private Long videoCount;
+
     protected void setSuccessResponse() {
         this.setSuccess(true);
         this.setCode(0);

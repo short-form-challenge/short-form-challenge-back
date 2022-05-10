@@ -18,4 +18,12 @@ public class ListApiResponse<T> extends ApiResponse {
         response.setData(data);
         return response;
     }
+
+    public static<T> ListApiResponse<T> adminSuccess(List<T> data, Long count) {
+        ListApiResponse<T> response = new ListApiResponse<>();
+        response.setSuccessResponse();
+        response.setCount(count);
+        response.setData(data);
+        return response;
+    }
 }
