@@ -7,6 +7,7 @@ import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,10 +16,12 @@ import java.util.List;
 @Getter
 @Setter
 public class VideoDetailResponseDto {
+
     public Long id;
     public Long showId;
     public String title;
     public String filePath;
+    public String thumbnailPath;
     public Long hit;
     public LocalDateTime postedAt;
     public Long likeCnt;

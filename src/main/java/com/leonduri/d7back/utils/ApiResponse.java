@@ -19,6 +19,8 @@ public class ApiResponse {
     @ApiModelProperty(value = "응답 메시지")
     private String msg;
 
+    private Long count;
+
     protected void setSuccessResponse() {
         this.setSuccess(true);
         this.setCode(0);
