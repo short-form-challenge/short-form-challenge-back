@@ -43,7 +43,7 @@ public class SignController {
 
         String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles());
 //        String refreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getId()), user.getRoles());
-        response.setHeader("X-AUTH_TOKEN", accessToken);
+        response.setHeader("X-AUTH-TOKEN", accessToken);
 //        response.setHeader("REFRESH-TOKEN", refreshToken);
 
 //        redisService.set(refreshToken, user.getEmail());
@@ -92,7 +92,7 @@ public class SignController {
 //        User user = userRepository.findById(Long.parseLong(jwtTokenProvider.getUserPk(refreshToken)))
 //                .orElseThrow(CUserNotFoundException::new);
 //        String accessToken = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles());
-//        response.setHeader("X-AUTH_TOKEN", accessToken);
+//        response.setHeader("X-AUTH-TOKEN", accessToken);
 //        return ApiResponse.success("access token이 재발급 되었습니다.");
 //    }
 

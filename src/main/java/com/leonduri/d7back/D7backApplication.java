@@ -25,7 +25,10 @@ public class D7backApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*");
+                registry
+                        .addMapping("/**")
+                        .allowedOrigins("*")
+                        .exposedHeaders("X-AUTH-TOKEN", "REFRESH-TOKEN");
             }
         };
     }
