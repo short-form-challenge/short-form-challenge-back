@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -175,7 +176,7 @@ public class VideoController {
     @PostMapping(value = "/videos")
     public SingleApiResponse<VideoSimpleResponseDto> saveVideo(
             HttpServletRequest request,
-            @RequestPart(value = "videoInfo") VideoSaveRequestDto requestDto,
+            @RequestPart(name = "videoInfo", value = "videoInfo") VideoSaveRequestDto requestDto,
             @RequestPart(required = true) MultipartFile video,
             @RequestPart(required = true) MultipartFile thumbnail
     ) throws Exception {
@@ -203,7 +204,7 @@ public class VideoController {
     public SingleApiResponse<VideoSimpleResponseDto> updateVideo(
             HttpServletRequest request,
             @PathVariable(value = "videoId", required = true) long videoId,
-            @RequestPart(value = "videoUpdateInfo", required = true) VideoUpdateRequestDto requestDto,
+            @RequestPart(name = "videoUpdateInfo", value = "videoUpdateInfo", required = true) VideoUpdateRequestDto requestDto,
             @RequestPart(required = false) MultipartFile video,
             @RequestPart(required = false) MultipartFile thumbnail
     ) throws Exception {

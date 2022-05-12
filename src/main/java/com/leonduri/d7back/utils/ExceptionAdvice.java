@@ -27,8 +27,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
     protected ApiResponse defaultException(HttpServletRequest request, Exception e) {
-
-        return ApiResponse.fail();
+        return ApiResponse.fail(e.getClass().toString());
     }
 
     @ExceptionHandler(CUserNotFoundException.class)
