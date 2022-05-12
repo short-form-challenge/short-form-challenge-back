@@ -15,8 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
   
     Optional<User> findByEmail(String email);
-  
-    @Override Optional<User> findById(Long aLong);
 
     @Query(value = "SELECT * FROM User limit :count offset :page", nativeQuery = true)
     List<User> findAdminUserList(@Param("count")Long count, @Param("page") Long page);
