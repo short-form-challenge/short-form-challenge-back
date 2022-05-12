@@ -72,11 +72,11 @@ public class UserService {
   //    Admin API
     public List<AdminUserResponseDto> findAdminUserList(Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return userRepo.findAll(pageRequest).stream().map(AdminUserResponseDto::new).collect(Collectors.toList());
+        return userRepository.findAll(pageRequest).stream().map(AdminUserResponseDto::new).collect(Collectors.toList());
     }
 
     public Long getCountAllUsers() {
-        return userRepo.countAllUser();
+        return userRepository.countAllUser();
     }
   
     public boolean validateEmail(String email) {
