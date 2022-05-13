@@ -27,6 +27,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
     protected ApiResponse defaultException(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
         return ApiResponse.fail(e.getClass().toString());
     }
 
