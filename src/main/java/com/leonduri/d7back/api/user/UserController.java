@@ -79,4 +79,18 @@ public class UserController {
         Long countUser = service.getCountAllUsers();
         return ListApiResponse.adminSuccess(service.findAdminUserList(page, 10), countUser);
     }
+
+    @Secured("ROLE_USER")
+    @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "accessToken",
+            required = true, dataType = "String", paramType = "header")
+    @ApiOperation(value = "유저 본인의 프로필 조회", notes = "로그인 한 유저의 프로필을 조회한다.")
+    @GetMapping(value = "/users/myProfile")
+    public SingleApiResponse<UserProfileResponseDto> getMyProfile(
+            HttpServletRequest request
+    ) throws Exception {
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+        return SingleApiResponse.success(service.getUserProfile(Long.parseLong(jwtTokenProvider.getUserPk(jwt))));
+    }
+
 }
