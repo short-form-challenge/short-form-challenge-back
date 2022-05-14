@@ -7,6 +7,7 @@ import com.leonduri.d7back.api.user.UserRepository;
 import com.leonduri.d7back.api.user.dto.AdminUserResponseDto;
 import com.leonduri.d7back.api.video.dto.*;
 import com.leonduri.d7back.utils.FileSystemStorageService;
+import com.leonduri.d7back.utils.exception.CNoPermissionException;
 import com.leonduri.d7back.utils.exception.CUnauthorizedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import com.leonduri.d7back.api.likes.Likes;
@@ -35,31 +36,29 @@ public class VideoService {
     public VideoDetailResponseDto findVideoById(Long videoId, Long userId) throws Exception {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
-        VideoDetailResponseDto videoListResponseDto = new VideoDetailResponseDto(video, requestUser);
-        return videoListResponseDto;
+        return new VideoDetailResponseDto(video, requestUser);
     }
 
     public VideoLikesResponseDto findUserById(Long videoId, Long userId) throws Exception {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
-        VideoLikesResponseDto v = new VideoLikesResponseDto(video, requestUser);
-
-        return v;
+        return new VideoLikesResponseDto(video, requestUser);
     }
 
     public AdminVideoDetailResponseDto findById(Long videoId) throws Exception {
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
-        AdminVideoDetailResponseDto v = new AdminVideoDetailResponseDto(video);
-
-        return v;
+        return new AdminVideoDetailResponseDto(video);
     }
 
     public int upHit(Long videoId) {
         return videoRepository.upHit(videoId);
     }
 
-    public void deleteVideoById(Long videoId) {
+    public void deleteVideoById(Long videoId, long postedBy) {
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+        if (video.getPostedBy().getId() != postedBy) { // 권한없음
+            throw new CNoPermissionException();
+        }
         fileSystemStorageService.delete(video.getFilePath());
         fileSystemStorageService.delete(video.getThumbnailPath());
         videoRepository.deleteById(videoId);
@@ -94,7 +93,7 @@ public class VideoService {
                     break;
                 }
             }
-            if(vList.get(i).getId() == lastId){
+            if(vList.get(i).getId().equals(lastId)) {
                 int cnt = 0;
                 for(int j = i + 1; j < vList.size(); j++){
                     cnt++;
@@ -121,7 +120,7 @@ public class VideoService {
                     break;
                 }
             }
-            if(vList.get(i).getId() == lastId){
+            if(vList.get(i).getId().equals(lastId)) {
                 int cnt = 0;
                 for(int j = i + 1; j < vList.size(); j++){
                     cnt++;
@@ -148,7 +147,7 @@ public class VideoService {
                     break;
                 }
             }
-            if (vList.get(i).getId() == lastId) {
+            if (vList.get(i).getId().equals(lastId)) {
                 int cnt = 0;
                 for (int j = i + 1; j < vList.size(); j++) {
                     cnt++;
@@ -176,7 +175,7 @@ public class VideoService {
                     break;
                 }
             }
-            if (vList.get(i).getId() == lastId) {
+            if (vList.get(i).getId().equals(lastId)) {
                 int cnt = 0;
                 for (int j = i + 1; j < vList.size(); j++) {
                     cnt++;

@@ -63,11 +63,7 @@ public class VideoController {
         String accessToken = request.getHeader("X-AUTH-TOKEN");
         String jwt = jwtTokenProvider.resolveAccessToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
-        Video requestVideo = videoService.findByVideoId(videoId);
-        if (requestVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt))) { // 권한없음
-            throw new CNoPermissionException();
-        }
-        videoService.deleteVideoById(videoId);
+        videoService.deleteVideoById(videoId, Long.parseLong(jwtTokenProvider.getUserPk(jwt)));
         return ApiResponse.success("해당 video " + videoId + "를 삭제하였습니다.");
     }
 
@@ -279,10 +275,6 @@ public class VideoController {
         if (!video.isEmpty() && !video.getContentType().startsWith("video")) throw new CWrongMediaFormatException();
         if (!thumbnail.isEmpty() && !thumbnail.getContentType().startsWith("image"))
             throw new CWrongMediaFormatException();
-
-        Video reqeustVideo = videoService.findByVideoId(videoId);
-        if (reqeustVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt)))
-            throw new CNoPermissionException();
 
         return SingleApiResponse.success(videoService.updateVideo(
                 Long.parseLong(jwtTokenProvider.getUserPk(jwt)), videoId, requestDto, video, thumbnail));
