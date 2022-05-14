@@ -4,7 +4,6 @@ import com.leonduri.d7back.api.category.Category;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
-import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +17,7 @@ public class VideoSaveRequestDto {
         Video v = new Video();
         v.setTitle(this.title);
         v.setVideoLength(this.length);
-        v.setUser(postedBy);
+        v.setPostedBy(postedBy);
         v.setCategory(category);
 
         v.setPostedAt(LocalDateTime.now());

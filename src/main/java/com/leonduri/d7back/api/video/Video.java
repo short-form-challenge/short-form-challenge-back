@@ -51,7 +51,7 @@ public class Video {
 //    Video n : User 1
     @ManyToOne
     @JoinColumn(name = "posted_by")
-    private User user;
+    private User postedBy;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

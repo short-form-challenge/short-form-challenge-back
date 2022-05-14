@@ -19,7 +19,7 @@ public class AdminMainVideoListResponseDto {
         this.showId = video.getShowId();
         this.title = video.getTitle();
 
-        User postedBy = video.getUser();
+        User postedBy = video.getPostedBy();
         UserSimpleResponseDto user = new UserSimpleResponseDto(postedBy);
         this.postedBy = user;
     }

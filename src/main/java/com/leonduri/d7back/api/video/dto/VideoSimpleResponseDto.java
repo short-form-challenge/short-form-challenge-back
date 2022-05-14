@@ -1,8 +1,5 @@
 package com.leonduri.d7back.api.video.dto;
 
-import com.leonduri.d7back.api.category.Category;
-import com.leonduri.d7back.api.likes.Likes;
-import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ public class VideoSimpleResponseDto {
     public VideoSimpleResponseDto(Video video) {
         this.id = video.getId();
         this.title = video.getTitle();
-        this.postedBy = video.getUser().getId();
+        this.postedBy = video.getPostedBy().getId();
         this.contentFilePath = video.getFilePath();
         this.thumbnailFilePath = video.getThumbnailPath();
     }
