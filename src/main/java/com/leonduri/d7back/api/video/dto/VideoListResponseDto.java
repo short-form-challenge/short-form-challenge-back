@@ -9,6 +9,7 @@ import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,7 @@ public class VideoListResponseDto {
     public String thumbnailPath;
     public Long likeCnt;
     public Boolean isLiked = false;
+    public LocalDateTime postedAt;
     UserSimpleResponseDto postedBy;
     public Category category;
 
@@ -29,7 +31,7 @@ public class VideoListResponseDto {
         this.title = video.getTitle();
         this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
-
+        this.postedAt = video.getPostedAt();
         this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
         this.category = video.getCategoryId();
     }
@@ -40,7 +42,7 @@ public class VideoListResponseDto {
         this.title = video.getTitle();
         this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
-
+        this.postedAt = video.getPostedAt();
         this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
 
         List<Likes> likesList = requestUser.getLikesList();
