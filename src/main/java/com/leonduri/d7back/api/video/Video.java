@@ -45,8 +45,8 @@ public class Video {
     @Column(name = "like_cnt", columnDefinition = "Bigint default 0")
     private Long likeCnt;
 
-    @Column(name="is_deleted", columnDefinition = "boolean default false")
-    private Boolean isDeleted;
+//    @Column(name="is_deleted", columnDefinition = "boolean default false")
+//    private Boolean isDeleted;
 
 //    Video n : User 1
     @ManyToOne
@@ -55,8 +55,7 @@ public class Video {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
-//    Null로 나오는 이유는?
+    private Category categoryId;
 
     @Column(name = "video_length", nullable = false)
     private Integer videoLength;

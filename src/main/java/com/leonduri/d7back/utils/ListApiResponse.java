@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ListApiResponse<T> extends ApiResponse {
     private List<T> data;
+    private Long count;
 
     public static<T> ListApiResponse<T> success(List<T> data) {
         ListApiResponse<T> response = new ListApiResponse<>();

@@ -31,7 +31,7 @@ public class VideoListResponseDto {
 
         UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 
     public VideoListResponseDto(Video video, User requestUser) {
@@ -51,6 +51,6 @@ public class VideoListResponseDto {
                 break;
             }
         }
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }

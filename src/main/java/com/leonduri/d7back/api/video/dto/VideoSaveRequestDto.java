@@ -26,7 +26,6 @@ public class VideoSaveRequestDto {
         v.setShowId(1L); // temporal value
         v.setHit(0L);
         v.setLikeCnt(0L);
-        v.setIsDeleted(false);
         return v;
     }
 }

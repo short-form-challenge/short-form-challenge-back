@@ -66,7 +66,7 @@ public class UserController {
             @ApiParam(value = "프로필 사진", required = false)
             @RequestPart(value = "profileFile", required = false)
                     MultipartFile profileFile,
-            @ApiParam(value = "수정할 닉네임", required = false) @RequestParam String nickname) {
+            @ApiParam(value = "수정할 닉네임", required = false) @RequestParam(required = false) String nickname) {
         String jwt = jwtTokenProvider.resolveAccessToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
         return SingleApiResponse.success(service.updateUser(

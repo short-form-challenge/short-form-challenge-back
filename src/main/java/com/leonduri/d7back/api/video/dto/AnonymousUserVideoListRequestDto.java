@@ -23,7 +23,7 @@ public class AnonymousUserVideoListRequestDto {
         Category category = new Category();
         category.setId(cate);
 
-        video.setCategory(category);
+        video.setCategoryId(category);
         return video;
     }
 }

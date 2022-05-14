@@ -28,6 +28,6 @@ public class AnonymousUserVideoListResponseDto {
         UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
 
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }

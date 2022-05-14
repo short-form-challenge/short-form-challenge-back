@@ -46,6 +46,6 @@ public class VideoDetailResponseDto {
                 break;
             }
         }
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }
