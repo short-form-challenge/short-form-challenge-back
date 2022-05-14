@@ -37,7 +37,7 @@ public class VideoController {
     private final LikesRepository likesRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public int size = 6;
+    public int size = 10;
     public int adminSize = 10;
 
     //    userId 임시
@@ -100,7 +100,6 @@ public class VideoController {
     @GetMapping(value = "/videos/myVideos")
     public VideoListApiResponse<VideoListResponseDto> getMyVideoList(
             HttpServletRequest request,
-            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
             @RequestParam("showId") @ApiParam(value = "마지막 비디오의 showId", required = true) Long showId,
             @RequestParam("lastId") @ApiParam(value = "마지막 비디오의 lastId", required = true) Long lastId) {
 
@@ -110,7 +109,29 @@ public class VideoController {
 
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
 
-        List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, showId, lastId, size);
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, showId, lastId, size);
+        List<VideoListResponseDto> ret = new ArrayList<>();
+
+        for (int i = 0; i < videoListResponseDtos.size(); i++) {
+            if (i != size) {
+                ret.add(videoListResponseDtos.get(i));
+            }
+            if (i == size) {
+                return VideoListApiResponse.lastSuccess(ret);
+            }
+        }
+
+        return VideoListApiResponse.success(ret);
+    }
+
+    @ApiOperation(value = "다른 유저의 비디오 리스트 조회", notes = "해당 유저가 올린 비디오를 10개씩 조회한다.")
+    @GetMapping(value = "/videos/otherVideos")
+    public VideoListApiResponse<VideoListResponseDto> getOtherVideoList(
+            @RequestParam("userId") @ApiParam(value = "유저의 Id", required = true) Long userId,
+            @RequestParam("showId") @ApiParam(value = "마지막 비디오의 showId", required = true) Long showId,
+            @RequestParam("lastId") @ApiParam(value = "마지막 비디오의 lastId", required = true) Long lastId) {
+
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, showId, lastId, size);
         List<VideoListResponseDto> ret = new ArrayList<>();
 
         for (int i = 0; i < videoListResponseDtos.size(); i++) {
@@ -143,10 +164,10 @@ public class VideoController {
         List<VideoListResponseDto> ret = new ArrayList<>();
 
         for (int i = 0; i < videoListResponseDtos.size(); i++) {
-            if (i != 6) {
+            if (i != size) {
                 ret.add(videoListResponseDtos.get(i));
             }
-            if (i == 6) {
+            if (i == size) {
                 return VideoListApiResponse.lastSuccess(ret);
             }
         }

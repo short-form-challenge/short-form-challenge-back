@@ -15,6 +15,7 @@ public class UserProfileResponseDto {
     public long userId;
     public String nickname;
     public String profileFilePath;
+    public String email;
     public int totalBadgeCnt;
     public int ongoingChallengeCnt;
     // user의 challenge 중 dayCnt > 0 && LastChallengedAt이 오늘인 challenge 수
@@ -24,6 +25,7 @@ public class UserProfileResponseDto {
         this.userId = u.getId();
         this.nickname = u.getNickname();
         this.profileFilePath = u.getProfileFilePath();
+        this.email = u.getEmail();
         List<Challenge> cList = u.getChallenges();
         this.totalBadgeCnt = 0;
         this.ongoingChallengeCnt = 0;

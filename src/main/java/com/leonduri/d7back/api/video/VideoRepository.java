@@ -41,14 +41,8 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
 
 //    TODO showId 정렬하고 lastId 기준으로 count개 가져오기
     @Query(value = "SELECT * FROM Video join User on Video.posted_by = User.id and Video.posted_by = :userId " +
-            "join Category on Video.category_id = Category.id and Video.category_id = :categoryId " +
             "where Video.show_id >= :showId order by Video.show_id, Video.id desc limit :count", nativeQuery = true)
-    List<Video> getMyVideoList(@Param("userId") Long userId, @Param("categoryId") Long categoryId, @Param("showId")Long showId, @Param("count") Integer count);
-
-//    @Query(value = "SELECT * FROM Video join User on Video.posted_by = User.id " +
-//            "join Category on Video.category_id = Category.id and Video.category_id = :categoryId " +
-//            "order by Video.show_id, Video.id desc limit :count offset :page", nativeQuery = true)
-//    List<Video> getMainVideoList(@Param("categoryId") Long categoryId, @Param("page")Long page, @Param("count") Integer count);
+    List<Video> getMyVideoList(@Param("userId") Long userId, @Param("showId")Long showId, @Param("count") Integer count);
 
     @Query(value = "SELECT * FROM Video join User on Video.posted_by = User.id " +
             "join Category on Video.category_id = Category.id and Video.category_id = :categoryId " +

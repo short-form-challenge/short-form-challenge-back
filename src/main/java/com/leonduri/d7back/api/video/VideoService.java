@@ -83,10 +83,10 @@ public class VideoService {
         //삭제
     }
 
-    public List<VideoListResponseDto> getMyVideoList(Long userId, Long categoryId, Long showId, Long lastId, Integer size) {
+    public List<VideoListResponseDto> getMyVideoList(Long userId, Long showId, Long lastId, Integer size) {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         List<VideoListResponseDto> ret = new ArrayList<>();
-        List<Video> vList = videoRepository.getMyVideoList(userId, categoryId, showId, size * 2);
+        List<Video> vList = videoRepository.getMyVideoList(userId, showId, size * 2);
 
         for (int i = 0; i < vList.size(); i++) {
             if(lastId == 0){
@@ -110,17 +110,6 @@ public class VideoService {
         }
         return ret;
     }
-
-//    public List<VideoListResponseDto> getMainVideoList(Long userId, Long categoryId, Long page, Integer size) {
-//        User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
-//        List<VideoListResponseDto> ret = new ArrayList<>();
-//        List<Video> vList = videoRepository.getMainVideoList(categoryId, page * size, size + 1);
-//        for (int i = 0; i < vList.size(); i++) {
-//            ret.add(new VideoListResponseDto(vList.get(i), requestUser));
-//        }
-//
-//        return ret;
-//    }
 
     public List<VideoListResponseDto> getMainVideoList(Long userId, Long categoryId, Long showId, Long lastId, Integer size) {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
