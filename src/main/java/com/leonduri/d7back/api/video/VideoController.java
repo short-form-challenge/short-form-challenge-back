@@ -42,10 +42,16 @@ public class VideoController {
 
     //    userId 임시
     @ApiOperation(value = "비디오 디테일 조회", notes = "비디오 하나의 디테일을 조회한다.")
-    @GetMapping(value = "/videos/{videoId}/{userId}")
+    @GetMapping(value = "/videos/{videoId}")
     public SingleApiResponse<VideoDetailResponseDto> getVideoById(
-            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
-            @PathVariable @ApiParam(value = "유저 Id", required = true) long userId) throws Exception {
+            HttpServletRequest request,
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
+
         videoService.upHit(videoId);
         return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
     }
@@ -60,21 +66,31 @@ public class VideoController {
 
     //    userId 임시
     @ApiOperation(value = "like 증가", notes = "해당 비디오의 like를 증가시킨다.")
-    @PostMapping(value = "/videos/upLikes/{videoId}/{userId}")
+    @PostMapping(value = "/videos/upLikes/{videoId}")
     public SingleApiResponse<VideoLikesResponseDto> updateUpVideoLikes(
-            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
-            @PathVariable @ApiParam(value = "유저 Id", required = true) long userId) throws Exception {
+            HttpServletRequest request,
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
         videoService.upLikeCnt(videoId, userId);
         return SingleApiResponse.success(videoService.findUserById(videoId, userId));
     }
 
     @ApiOperation(value = "like 감소", notes = "해당 비디오의 like를 감소시킨다.")
-    @PostMapping(value = "/videos/downLikes/{videoId}/{userId}")
+    @PostMapping(value = "/videos/downLikes/{videoId}")
     public SingleApiResponse<VideoLikesResponseDto> updateDownVideoLikes(
-            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId,
-            @PathVariable @ApiParam(value = "유저Id", required = true) long userId) throws Exception {
-        videoService.downLikeCnt(videoId, userId);
+            HttpServletRequest request,
+            @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
 
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
+        videoService.downLikeCnt(videoId, userId);
         return SingleApiResponse.success(videoService.findUserById(videoId, userId));
     }
 
@@ -83,10 +99,16 @@ public class VideoController {
     @ApiOperation(value = "나의 비디오 리스트 조회", notes = "내가 올린 비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos/myVideos")
     public VideoListApiResponse<VideoListResponseDto> getMyVideoList(
-            @RequestParam("userId") @ApiParam(value = "유저 Id", required = true) Long userId,
+            HttpServletRequest request,
             @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
             @RequestParam("showId") @ApiParam(value = "마지막 비디오의 showId", required = true) Long showId,
             @RequestParam("lastId") @ApiParam(value = "마지막 비디오의 lastId", required = true) Long lastId) {
+
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
 
         List<VideoListResponseDto> videoListResponseDtos = videoService.getMyVideoList(userId, categoryId, showId, lastId, size);
         List<VideoListResponseDto> ret = new ArrayList<>();
@@ -105,10 +127,18 @@ public class VideoController {
 
     @ApiOperation(value = "메인 비디오 리스트 조회", notes = "메인 비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos")
-    public VideoListApiResponse<VideoListResponseDto> getVideoList(@ApiParam(value = "유저 Id", required = true) @RequestParam("userId") Long userId,
-                                                                   @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
-                                                                   @ApiParam(value = "마지막 video의 showId", required = true) @RequestParam("showId") Long showId,
-                                                                   @ApiParam(value = "마지막 video의 Id", required = true) @RequestParam("lastId") Long lastId) {
+    public VideoListApiResponse<VideoListResponseDto> getVideoList(
+            HttpServletRequest request,
+            @ApiParam(value = "카테고리 Id", required = true) @RequestParam("cate") Long categoryId,
+            @ApiParam(value = "마지막 video의 showId", required = true) @RequestParam("showId") Long showId,
+            @ApiParam(value = "마지막 video의 Id", required = true) @RequestParam("lastId") Long lastId) {
+
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
+
         List<VideoListResponseDto> videoListResponseDtos = videoService.getMainVideoList(userId, categoryId, showId, lastId, size);
         List<VideoListResponseDto> ret = new ArrayList<>();
 
@@ -150,10 +180,16 @@ public class VideoController {
     @ApiOperation(value = "관심 비디오 리스트 조회", notes = "내가 좋아요를 누른 비디오를 6개씩 조회한다.")
     @GetMapping(value = "/videos/likeVideos")
     public VideoListApiResponse<VideoListResponseDto> getLikedVideoList(
-            @RequestParam("userId") @ApiParam(value = "유저 Id", required = true) Long userId,
+            HttpServletRequest request,
             @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
             @RequestParam("showId") @ApiParam(value = "마지막 video의 showId", required = true) Long showId,
             @RequestParam("lastId") @ApiParam(value = "마지막 video의 lastId", required = true) Long lastId) {
+
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
 
         List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, categoryId, showId, lastId, size);
         List<VideoListResponseDto> ret = new ArrayList<>();
@@ -180,6 +216,7 @@ public class VideoController {
             @RequestPart(required = true) MultipartFile video,
             @RequestPart(required = true) MultipartFile thumbnail
     ) throws Exception {
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
 
         String jwt = jwtTokenProvider.resolveAccessToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
