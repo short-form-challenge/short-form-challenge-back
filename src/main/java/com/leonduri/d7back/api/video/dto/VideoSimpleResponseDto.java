@@ -1,6 +1,7 @@
 package com.leonduri.d7back.api.video.dto;
 
 import com.leonduri.d7back.api.video.Video;
+import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +18,7 @@ public class VideoSimpleResponseDto {
         this.id = video.getId();
         this.title = video.getTitle();
         this.postedBy = video.getPostedBy().getId();
-        this.contentFilePath = video.getFilePath();
-        this.thumbnailFilePath = video.getThumbnailPath();
+        this.contentFilePath = ResponseDtoFilePathParser.parseVideoFilePath(video.getFilePath());
+        this.thumbnailFilePath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
     }
 }

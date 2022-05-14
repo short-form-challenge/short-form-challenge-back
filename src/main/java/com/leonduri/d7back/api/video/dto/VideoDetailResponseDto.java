@@ -5,6 +5,7 @@ import com.leonduri.d7back.api.likes.Likes;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
+import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,17 +32,16 @@ public class VideoDetailResponseDto {
         this.id = video.getId();
         this.showId = video.getShowId();
         this.title = video.getTitle();
-        this.filePath = video.getFilePath();
+        this.filePath = ResponseDtoFilePathParser.parseVideoFilePath(video.getFilePath());
         this.hit = video.getHit();
         this.postedAt = video.getPostedAt();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
-        this.posted_by = userSimpleResponseDto;
+        this.posted_by = new UserSimpleResponseDto(video.getPostedBy());
 
         List<Likes> likesList = requestUser.getLikesList();
         for(Likes like : likesList){
-            if (like.getVideo().getId() == video.getId()) {
+            if (like.getVideo().getId().equals(video.getId())) {
                 this.isLiked = true;
                 break;
             }
