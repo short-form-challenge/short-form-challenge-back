@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class D7backApplication {
 
-    @Value("${spring.servlet.multipart.docker-location}")
+    @Value("${spring.servlet.multipart.location}")
     private String multifilePath;
 
     public static void main(String[] args) {

@@ -11,21 +11,16 @@ import com.leonduri.d7back.utils.exception.CUnauthorizedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import com.leonduri.d7back.api.likes.Likes;
 import com.leonduri.d7back.api.likes.LikesRepository;
-import com.leonduri.d7back.api.user.User;
-import com.leonduri.d7back.api.user.UserRepository;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
-import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import com.leonduri.d7back.utils.exception.CVideoNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,6 +60,8 @@ public class VideoService {
 
     public void deleteVideoById(Long videoId) {
         Video video = videoRepository.findById(videoId).orElseThrow(CVideoNotFoundException::new);
+        fileSystemStorageService.delete(video.getFilePath());
+        fileSystemStorageService.delete(video.getThumbnailPath());
         videoRepository.deleteById(videoId);
     }
 
@@ -218,7 +215,7 @@ public class VideoService {
         Video v = videoRepository.findById(videoId).orElseThrow(Exception::new);
 
         // postedBy validation
-        if (v.getUser().isAdmin() && v.getUser().getId() != userId) throw new CUnauthorizedException();
+        if (v.getPostedBy().isAdmin() && v.getPostedBy().getId() != userId) throw new CUnauthorizedException();
 
         if (!video.isEmpty()) fileSystemStorageService.storeVideo(video, videoId);
         if (!thumbnail.isEmpty()) fileSystemStorageService.storeThumbnail(thumbnail, videoId);
@@ -235,6 +232,11 @@ public class VideoService {
     }
 
     public void deleteVideosByPostedBy(Long postedBy) {
+        User u = userRepository.findById(postedBy).orElseThrow(CUserNotFoundException::new);
+        for (Video v: u.getVideos()) {
+            fileSystemStorageService.delete(v.getFilePath());
+            fileSystemStorageService.delete(v.getThumbnailPath());
+        }
         videoRepository.deleteVideosByPostedBy(postedBy);
     }
 

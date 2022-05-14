@@ -55,22 +55,20 @@ public class VideoController {
         return SingleApiResponse.success(videoService.findVideoById(videoId, userId));
     }
 
-    //TODO 파일 삭제 추가 필요
     @ApiOperation(value = "비디오 삭제", notes = "비디오 id를 기준으로 비디오 하나를 삭제한다.")
     @DeleteMapping(value = "/videos/{videoId}")
-    public void deleteVideoById(
+    public ApiResponse deleteVideoById(
             HttpServletRequest request,
             @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
         String accessToken = request.getHeader("X-AUTH-TOKEN");
         String jwt = jwtTokenProvider.resolveAccessToken(request);
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
         Video requestVideo = videoService.findByVideoId(videoId);
-        if (requestVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt))) {
-//            권한없음
+        if (requestVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt))) { // 권한없음
             throw new CNoPermissionException();
         }
-
-        else videoService.deleteVideoById(videoId);
+        videoService.deleteVideoById(videoId);
+        return ApiResponse.success("해당 video " + videoId + "를 삭제하였습니다.");
     }
 
     //    userId 임시
@@ -292,9 +290,10 @@ public class VideoController {
 
     @ApiOperation(value = "Admin page : 유저의 비디오 삭제", notes = "유저 정보로 전체 비디오 삭제")
     @DeleteMapping(value = "/admin/{userId}")
-    public void deleteVideosByPostedBy(
+    public ApiResponse deleteVideosByPostedBy(
             @PathVariable @ApiParam(value = "유저 Id", required = true) long userId) throws Exception {
         videoService.deleteVideosByPostedBy(userId);
+        return ApiResponse.success("해당 user " + userId + "가 게시한 비디오를 모두 삭제하였습니다.");
     }
 
     //        API 두개 호출 필요

@@ -18,7 +18,7 @@ public class VideoSaveRequestDto {
         v.setTitle(this.title);
         v.setVideoLength(this.length);
         v.setPostedBy(postedBy);
-        v.setCategoryId(category);
+        v.setCategory(category);
 
         v.setPostedAt(LocalDateTime.now());
         v.setFilePath("");  // temporarily

@@ -3,6 +3,7 @@ package com.leonduri.d7back.api.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.leonduri.d7back.api.challenge.Challenge;
 import com.leonduri.d7back.api.likes.Likes;
+import com.leonduri.d7back.api.video.Video;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Builder
@@ -61,6 +61,12 @@ public class User implements UserDetails {
     List<Challenge> challenges;
     // reference
     // https://perfectacle.github.io/2019/05/01/hibernate-multiple-bag-fetch-exception/
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "postedBy"
+    )
+    List<Video> videos;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

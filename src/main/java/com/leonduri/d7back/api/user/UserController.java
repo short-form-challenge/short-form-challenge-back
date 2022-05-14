@@ -5,6 +5,7 @@ import com.leonduri.d7back.api.user.dto.UserProfileResponseDto;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.user.dto.UserUpdateResponseDto;
 import com.leonduri.d7back.config.security.JwtTokenProvider;
+import com.leonduri.d7back.utils.ApiResponse;
 import com.leonduri.d7back.utils.ListApiResponse;
 import com.leonduri.d7back.utils.SingleApiResponse;
 import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
@@ -92,5 +93,19 @@ public class UserController {
         if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
         return SingleApiResponse.success(service.getUserProfile(Long.parseLong(jwtTokenProvider.getUserPk(jwt))));
     }
+
+    @Secured("ROLE_USER")
+    @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "accessToken",
+            required = true, dataType = "String", paramType = "header")
+    @ApiOperation(value = "유저 탈퇴", notes = "유저의 정보 및 유저가 게시한 비디오를 모두 삭제한다.")
+    @DeleteMapping(value = "/users")
+    public ApiResponse deleteUser(HttpServletRequest request) {
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
+        service.deleteUser(userId);
+        return ApiResponse.success("해당 user " + userId + "의 정보 및 게시글을 모두 삭제하였습니다.");
+    }
+
 
 }

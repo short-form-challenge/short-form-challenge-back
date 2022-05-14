@@ -3,6 +3,7 @@ package com.leonduri.d7back.api.user;
 import com.leonduri.d7back.api.challenge.Challenge;
 import com.leonduri.d7back.api.challenge.ChallengeRepository;
 import com.leonduri.d7back.api.user.dto.*;
+import com.leonduri.d7back.api.video.Video;
 import com.leonduri.d7back.api.video.dto.AdminMainVideoListResponseDto;
 import com.leonduri.d7back.utils.FileSystemStorageService;
 import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
@@ -87,5 +88,15 @@ public class UserService {
     public boolean validateNickname(String nickname) {
         User u = userRepository.findByNickname(nickname).orElse(new User(-1L));
         return u.getId() == -1L;
+    }
+
+    public void deleteUser(Long id) {
+        User u = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
+        for (Video v: u.videos) {
+            storageService.delete(v.getFilePath());
+            storageService.delete(v.getThumbnailPath());
+        }
+        if (u.getProfileFilePath() != null) storageService.delete(u.getProfileFilePath());
+        userRepository.deleteById(id);
     }
 }

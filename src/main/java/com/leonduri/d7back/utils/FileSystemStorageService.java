@@ -91,7 +91,7 @@ public class FileSystemStorageService {
         }
     }
 
-    public void delete(String filename) {
-        FileSystemUtils.deleteRecursively(Paths.get(baseUploadPath + '/' + filename).toFile());
+    public void delete(String filePath) {
+        FileSystemUtils.deleteRecursively(Paths.get(filePath).toFile());
     }
 }
