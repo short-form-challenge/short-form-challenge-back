@@ -202,7 +202,6 @@ public class VideoController {
     @GetMapping(value = "/videos/likeVideos")
     public VideoListApiResponse<VideoListResponseDto> getLikedVideoList(
             HttpServletRequest request,
-            @RequestParam("cate") @ApiParam(value = "카테고리 Id", required = true) Long categoryId,
             @RequestParam("showId") @ApiParam(value = "마지막 video의 showId", required = true) Long showId,
             @RequestParam("lastId") @ApiParam(value = "마지막 video의 lastId", required = true) Long lastId) {
 
@@ -212,7 +211,7 @@ public class VideoController {
 
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(jwt));
 
-        List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, categoryId, showId, lastId, size);
+        List<VideoListResponseDto> videoListResponseDtos = videoService.getLikedVideoList(userId, showId, lastId, size);
         List<VideoListResponseDto> ret = new ArrayList<>();
 
         for (int i = 0; i < videoListResponseDtos.size(); i++) {

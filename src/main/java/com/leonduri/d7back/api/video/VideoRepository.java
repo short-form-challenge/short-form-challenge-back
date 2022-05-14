@@ -56,9 +56,8 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
 
     @Query(value = "SELECT * FROM Video join User " +
             "join Likes on Likes.liked_by = :userId and likes.liked_on = Video.id and User.id = :userId " +
-            "join Category on Video.category_id = Category.id and Video.category_id = :categoryId " +
             "where Video.show_id >= :showId order by Video.show_id, Video.id desc limit :count", nativeQuery = true)
-    List<Video> getLikedVideoList(@Param("userId") Long userId, @Param("categoryId") Long categoryId, @Param("showId")Long showId, @Param("count") Integer count);
+    List<Video> getLikedVideoList(@Param("userId") Long userId, @Param("showId")Long showId, @Param("count") Integer count);
 
     //Admin API
     @Modifying

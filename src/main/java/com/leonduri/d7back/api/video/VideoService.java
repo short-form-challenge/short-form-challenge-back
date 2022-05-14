@@ -165,10 +165,10 @@ public class VideoService {
         return ret;
     }
 
-    public List<VideoListResponseDto> getLikedVideoList(Long userId, Long categoryId, Long showId, Long lastId, Integer size) {
+    public List<VideoListResponseDto> getLikedVideoList(Long userId, Long showId, Long lastId, Integer size) {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         List<VideoListResponseDto> ret = new ArrayList<>();
-        List<Video> vList = videoRepository.getLikedVideoList(userId, categoryId, showId, size * 2);
+        List<Video> vList = videoRepository.getLikedVideoList(userId, showId, size * 2);
 
         for (int i = 0; i < vList.size(); i++) {
             if (lastId == 0) {
