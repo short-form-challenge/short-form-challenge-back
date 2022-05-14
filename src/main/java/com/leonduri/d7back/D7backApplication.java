@@ -46,8 +46,19 @@ public class D7backApplication {
             }
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler("/file/**")
-                        .addResourceLocations(multifilePath)
+//                ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler("/file/thumbnails/**")
+//                        .addResourceLocations("file:" + "/Users/jinhyeok/d7Files/thumbnails/")
+//                        .setCachePeriod(20);
+//                String path = "file:" + "/home/ubuntu/back/d7files/";
+                String path = "file:" + "/Users/jinhyeok/d7Files/";
+                registry.addResourceHandler("/file/profiles/**")
+                        .addResourceLocations(path + "profiles/")
+                        .setCachePeriod(20);
+                registry.addResourceHandler("/file/thumbnails/**")
+                        .addResourceLocations(path + "thumbnails/")
+                        .setCachePeriod(20);
+                registry.addResourceHandler("/file/videos/**")
+                        .addResourceLocations(path + "videos/")
                         .setCachePeriod(20);
             }
         };
