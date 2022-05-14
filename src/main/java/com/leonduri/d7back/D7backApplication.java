@@ -49,7 +49,8 @@ public class D7backApplication {
 //                ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler("/file/thumbnails/**")
 //                        .addResourceLocations("file:" + "/Users/jinhyeok/d7Files/thumbnails/")
 //                        .setCachePeriod(20);
-                String path = "file:" + "/home/ubuntu/back/d7files/";
+//                String path = "file:" + "/home/ubuntu/back/d7files/";
+                String path = "file:" + "/Users/jinhyeok/d7Files/";
                 registry.addResourceHandler("/file/profiles/**")
                         .addResourceLocations(path + "profiles/")
                         .setCachePeriod(20);

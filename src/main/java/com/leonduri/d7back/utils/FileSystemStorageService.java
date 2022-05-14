@@ -54,19 +54,25 @@ public class FileSystemStorageService {
 
     public String storeProfile(MultipartFile file, String username) {
         String[] tmp = file.getOriginalFilename().split("\\.");
-        String newFileName = username + '.' + tmp[tmp.length - 1];
+        String newFileName = "";
+        if (tmp.length > 1) newFileName = username + '.' + tmp[tmp.length - 1];
+        else newFileName = username; // no extension
         return store(file, "profiles", newFileName);
     }
 
     public String storeVideo(MultipartFile video, long videoId) {
         String[] tmp = video.getOriginalFilename().split("\\.");
-        String newFileName = "v_" + videoId + '.' + tmp[tmp.length - 1];
+        String newFileName = "";
+        if (tmp.length > 1) newFileName = "v_" + videoId + '.' + tmp[tmp.length - 1];
+        else newFileName = "v_" + videoId; // no extension
         return store(video, "videos", newFileName);
     }
 
     public String storeThumbnail(MultipartFile thumbnail, long videoId) {
         String[] tmp = thumbnail.getOriginalFilename().split("\\.");
-        String newFileName = "t_" + videoId + '.' + tmp[tmp.length - 1];
+        String newFileName = "";
+        if (tmp.length > 1) newFileName = "t_" + videoId + '.' + tmp[tmp.length - 1];
+        else newFileName = "t_" + videoId; // no extension
         return store(thumbnail, "thumbnails", newFileName);
     }
 
