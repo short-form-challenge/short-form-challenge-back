@@ -1,5 +1,6 @@
 package com.leonduri.d7back;
 
+import io.swagger.models.HttpMethod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,7 +35,14 @@ public class D7backApplication {
                 registry
                         .addMapping("/**")
                         .allowedOrigins("*")
-                        .exposedHeaders("X-AUTH-TOKEN", "REFRESH-TOKEN");
+                        .exposedHeaders("X-AUTH-TOKEN", "REFRESH-TOKEN")
+                        .allowedMethods(
+                                HttpMethod.GET.name(),
+                                HttpMethod.HEAD.name(),
+                                HttpMethod.POST.name(),
+                                HttpMethod.PUT.name(),
+                                HttpMethod.DELETE.name()
+                        );
             }
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -45,4 +53,3 @@ public class D7backApplication {
         };
     }
 }
-    
