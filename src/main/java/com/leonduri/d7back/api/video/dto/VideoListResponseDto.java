@@ -20,7 +20,7 @@ public class VideoListResponseDto {
     public String thumbnailPath;
     public Long likeCnt;
     public Boolean isLiked = false;
-    UserSimpleResponseDto posted_by;
+    UserSimpleResponseDto postedBy;
     public Category category;
 
     public VideoListResponseDto(Video video) {
@@ -30,7 +30,7 @@ public class VideoListResponseDto {
         this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
 
-        this.posted_by = new UserSimpleResponseDto(video.getPostedBy());
+        this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
         this.category = video.getCategoryId();
     }
 
@@ -41,7 +41,7 @@ public class VideoListResponseDto {
         this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
 
-        this.posted_by = new UserSimpleResponseDto(video.getPostedBy());
+        this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
 
         List<Likes> likesList = requestUser.getLikesList();
         for(Likes like : likesList){
