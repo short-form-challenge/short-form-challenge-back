@@ -1,6 +1,5 @@
 package com.leonduri.d7back.api.video;
 
-import com.leonduri.d7back.api.user.dto.AdminUserResponseDto;
 import com.leonduri.d7back.api.video.dto.VideoListResponseDto;
 import com.leonduri.d7back.api.video.dto.VideoSaveRequestDto;
 import com.leonduri.d7back.api.video.dto.VideoSimpleResponseDto;
@@ -8,13 +7,13 @@ import com.leonduri.d7back.api.video.dto.VideoUpdateRequestDto;
 import com.leonduri.d7back.config.security.JwtTokenProvider;
 import com.leonduri.d7back.utils.*;
 import com.leonduri.d7back.utils.exception.CInvalidJwtTokenException;
+import com.leonduri.d7back.utils.exception.CNoPermissionException;
 import com.leonduri.d7back.utils.exception.CWrongMediaFormatException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -60,8 +59,18 @@ public class VideoController {
     @ApiOperation(value = "비디오 삭제", notes = "비디오 id를 기준으로 비디오 하나를 삭제한다.")
     @DeleteMapping(value = "/videos/{videoId}")
     public void deleteVideoById(
+            HttpServletRequest request,
             @PathVariable @ApiParam(value = "비디오 Id", required = true) long videoId) throws Exception {
-        videoService.deleteVideoById(videoId);
+        String accessToken = request.getHeader("X-AUTH-TOKEN");
+        String jwt = jwtTokenProvider.resolveAccessToken(request);
+        if (!jwtTokenProvider.validateToken(jwt)) throw new CInvalidJwtTokenException();
+        Video requestVideo = videoService.findByVideoId(videoId);
+        if (requestVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt))) {
+//            권한없음
+            throw new CNoPermissionException();
+        }
+
+        else videoService.deleteVideoById(videoId);
     }
 
     //    userId 임시
@@ -272,6 +281,10 @@ public class VideoController {
         if (!video.isEmpty() && !video.getContentType().startsWith("video")) throw new CWrongMediaFormatException();
         if (!thumbnail.isEmpty() && !thumbnail.getContentType().startsWith("image"))
             throw new CWrongMediaFormatException();
+
+        Video reqeustVideo = videoService.findByVideoId(videoId);
+        if (reqeustVideo.getPostedBy().getId() != Long.parseLong(jwtTokenProvider.getUserPk(jwt)))
+            throw new CNoPermissionException();
 
         return SingleApiResponse.success(videoService.updateVideo(
                 Long.parseLong(jwtTokenProvider.getUserPk(jwt)), videoId, requestDto, video, thumbnail));

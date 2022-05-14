@@ -29,9 +29,9 @@ public class VideoListResponseDto {
         this.thumbnailPath = video.getThumbnailPath();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
+        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 
     public VideoListResponseDto(Video video, User requestUser) {
@@ -41,7 +41,7 @@ public class VideoListResponseDto {
         this.thumbnailPath = video.getThumbnailPath();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
+        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
 
         List<Likes> likesList = requestUser.getLikesList();
@@ -51,6 +51,6 @@ public class VideoListResponseDto {
                 break;
             }
         }
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }

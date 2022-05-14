@@ -1,14 +1,10 @@
 package com.leonduri.d7back.api.video.dto;
 
 import com.leonduri.d7back.api.category.Category;
-import com.leonduri.d7back.api.likes.Likes;
-import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -29,9 +25,9 @@ public class AnonymousUserVideoListResponseDto {
         this.thumbnailPath = video.getThumbnailPath();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
+        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
 
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }

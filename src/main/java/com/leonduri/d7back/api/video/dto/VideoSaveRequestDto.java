@@ -4,7 +4,6 @@ import com.leonduri.d7back.api.category.Category;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
-import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 
@@ -18,8 +17,8 @@ public class VideoSaveRequestDto {
         Video v = new Video();
         v.setTitle(this.title);
         v.setVideoLength(this.length);
-        v.setUser(postedBy);
-        v.setCategory(category);
+        v.setPostedBy(postedBy);
+        v.setCategoryId(category);
 
         v.setPostedAt(LocalDateTime.now());
         v.setFilePath("");  // temporarily
@@ -27,7 +26,6 @@ public class VideoSaveRequestDto {
         v.setShowId(1L); // temporal value
         v.setHit(0L);
         v.setLikeCnt(0L);
-        v.setIsDeleted(false);
         return v;
     }
 }

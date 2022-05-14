@@ -7,9 +7,7 @@ import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.tomcat.jni.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class VideoDetailResponseDto {
         this.postedAt = video.getPostedAt();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getUser());
+        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
         this.posted_by = userSimpleResponseDto;
 
         List<Likes> likesList = requestUser.getLikesList();
@@ -48,6 +46,6 @@ public class VideoDetailResponseDto {
                 break;
             }
         }
-        this.category = video.getCategory();
+        this.category = video.getCategoryId();
     }
 }

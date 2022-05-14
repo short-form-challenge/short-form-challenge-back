@@ -85,6 +85,12 @@ public class ExceptionAdvice {
         return ApiResponse.fail("JSON 형식이 맞지 않아 파싱할 수 없거나 request message 중 형식 오류가 있습니다.");
     }
 
+    @ExceptionHandler(CNoPermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ApiResponse noPermissionUser (HttpServletRequest request, CNoPermissionException e) {
+        return ApiResponse.fail(CNoPermissionException.errorMsg);
+    }
+
     @ExceptionHandler(CUnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ApiResponse unauthorized (HttpServletRequest request, CUnauthorizedException e) {
