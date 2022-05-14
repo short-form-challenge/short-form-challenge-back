@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Long countAllUser();
   
     Optional<User> findByNickname(String nickname);
+
+    @Override void deleteById(Long id);
 }
