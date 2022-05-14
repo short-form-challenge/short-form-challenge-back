@@ -46,7 +46,7 @@ public class D7backApplication {
             }
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler("/videos/**")
+                ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler("/file/**")
                         .addResourceLocations(multifilePath)
                         .setCachePeriod(20);
             }

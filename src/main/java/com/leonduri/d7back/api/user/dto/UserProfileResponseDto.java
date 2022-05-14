@@ -3,12 +3,10 @@ package com.leonduri.d7back.api.user.dto;
 import com.leonduri.d7back.api.challenge.Challenge;
 import com.leonduri.d7back.api.challenge.dto.ChallengeByUserResponseDto;
 import com.leonduri.d7back.api.user.User;
+import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserProfileResponseDto {
@@ -24,7 +22,7 @@ public class UserProfileResponseDto {
     public UserProfileResponseDto (User u) {
         this.userId = u.getId();
         this.nickname = u.getNickname();
-        this.profileFilePath = u.getProfileFilePath();
+        this.profileFilePath = ResponseDtoFilePathParser.parseProfileFilePath(u.getProfileFilePath());
         this.email = u.getEmail();
         List<Challenge> cList = u.getChallenges();
         this.totalBadgeCnt = 0;

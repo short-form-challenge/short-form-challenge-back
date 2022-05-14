@@ -1,6 +1,7 @@
 package com.leonduri.d7back.api.video.dto;
 
 import com.leonduri.d7back.api.video.Video;
+import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,14 +18,14 @@ public class AdminVideoDetailResponseDto {
         public long likeCnt;
         public long userId;
         public String nickname;
-        public String thumbnailPath;
+//        public String thumbnailPath;
         public String filePath;
 
         public AdminVideoDetailResponseDto(Video video) {
             this.id = video.getId();
             this.showId = video.getShowId();
             this.title = video.getTitle();
-            this.filePath = video.getFilePath();
+            this.filePath = ResponseDtoFilePathParser.parseVideoFilePath(video.getFilePath());
             this.hit = video.getHit();
             this.postedAt = video.getPostedAt();
             this.likeCnt = video.getLikeCnt();
