@@ -18,7 +18,6 @@ public class AnonymousUserVideoListResponseDto {
     public Long likeCnt;
     public Boolean isLiked = false;
     public LocalDateTime postedAt;
-
     UserSimpleResponseDto posted_by;
     public Category category;
 

@@ -32,7 +32,6 @@ public class VideoListResponseDto {
         this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
         this.postedAt = video.getPostedAt();
-
         this.posted_by = new UserSimpleResponseDto(video.getPostedBy());
         this.category = video.getCategoryId();
     }
