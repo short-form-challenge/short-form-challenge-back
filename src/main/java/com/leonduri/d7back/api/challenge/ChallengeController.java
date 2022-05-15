@@ -1,5 +1,7 @@
 package com.leonduri.d7back.api.challenge;
 
+import com.leonduri.d7back.api.challenge.dto.ChallengeSimpleResponseDto;
+import com.leonduri.d7back.utils.ListApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +14,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ChallengeController {
-    private final ChallengeRepository challengeRepository;
+    private final ChallengeService challengeService;
 
     @ApiOperation(value = "챌린지 조회", notes = "모든 챌린지를 조회한다.")
     @GetMapping(value = "/challenges")
-    public List<Challenge> challengeList() {
-        return challengeRepository.findAll();
+    public ListApiResponse<ChallengeSimpleResponseDto> getAllChallenges() {
+        return ListApiResponse.success(challengeService.getAllChallenges());
     }
 }
