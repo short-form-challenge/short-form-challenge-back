@@ -15,7 +15,7 @@ public class AnonymousUserVideoListResponseDto {
     public String thumbnailPath;
     public Long likeCnt;
     public Boolean isLiked = false;
-    UserSimpleResponseDto posted_by;
+    UserSimpleResponseDto postedBy;
     public Category category;
 
     public AnonymousUserVideoListResponseDto(Video video) {
@@ -25,9 +25,7 @@ public class AnonymousUserVideoListResponseDto {
         this.thumbnailPath = video.getThumbnailPath();
         this.likeCnt = video.getLikeCnt();
 
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto(video.getPostedBy());
-        this.posted_by = userSimpleResponseDto;
-
+        this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
         this.category = video.getCategoryId();
     }
 }

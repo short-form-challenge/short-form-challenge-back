@@ -25,7 +25,7 @@ public class VideoDetailResponseDto {
     public LocalDateTime postedAt;
     public Long likeCnt;
     public Boolean isLiked = false;
-    UserSimpleResponseDto posted_by;
+    UserSimpleResponseDto postedBy;
     public Category category;
 
     public VideoDetailResponseDto(Video video, User requestUser) {
@@ -37,7 +37,7 @@ public class VideoDetailResponseDto {
         this.postedAt = video.getPostedAt();
         this.likeCnt = video.getLikeCnt();
 
-        this.posted_by = new UserSimpleResponseDto(video.getPostedBy());
+        this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
 
         List<Likes> likesList = requestUser.getLikesList();
         for(Likes like : likesList){
