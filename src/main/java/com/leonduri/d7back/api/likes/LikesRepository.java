@@ -16,4 +16,7 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     @Transactional
     @Query(value = "DELETE FROM Likes where liked_on = :videoId and liked_by = :userId", nativeQuery = true)
     int deleteLikes(@Param("videoId") Long videoId, @Param("userId") Long userId);
+
+    @Query(value = "select count(liked_on) from likes where liked_on = :videoId", nativeQuery = true)
+    Long countLikes(@Param("videoId") Long videoId);
 }

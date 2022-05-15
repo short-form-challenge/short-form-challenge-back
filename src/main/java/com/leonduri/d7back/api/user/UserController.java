@@ -106,6 +106,4 @@ public class UserController {
         service.deleteUser(userId);
         return ApiResponse.success("해당 user " + userId + "의 정보 및 게시글을 모두 삭제하였습니다.");
     }
-
-
 }

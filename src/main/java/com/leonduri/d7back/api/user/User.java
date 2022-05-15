@@ -29,7 +29,10 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "user"
+    )
     private List<Likes> likesList = new ArrayList<>();
 
     @Column(unique = true, nullable = false, length = 100)
@@ -116,4 +119,6 @@ public class User implements UserDetails {
     public User(long id) {
         this.id = id;
     }
+
+
 }

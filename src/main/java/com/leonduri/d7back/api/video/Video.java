@@ -1,5 +1,6 @@
 package com.leonduri.d7back.api.video;
 
+import com.leonduri.d7back.api.likes.Likes;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.category.Category;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -59,5 +61,11 @@ public class Video {
 
     @Column(name = "video_length", nullable = false)
     private Integer videoLength;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "video"
+    )
+    List<Likes> likesList;
 
 }

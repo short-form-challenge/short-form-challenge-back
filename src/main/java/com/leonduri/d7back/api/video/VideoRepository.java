@@ -31,13 +31,8 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     //    비디오 리스트 조회 API
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Video set Video.like_cnt = Video.like_cnt + 1 where Video.id = :videoId", nativeQuery = true)
-    int upLikeCnt(@Param("videoId") Long videoId);
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE Video set Video.like_cnt = Video.like_cnt - 1 where Video.id = :videoId", nativeQuery = true)
-    int downLikeCnt(@Param("videoId") Long videoId);
+    @Query(value = "UPDATE Video set Video.like_cnt = :likeCount where Video.id = :videoId", nativeQuery = true)
+    int changeLikeCnt(@Param("videoId") Long videoId, @Param("likeCount") Long likeCount);
 
 //    TODO showId 정렬하고 lastId 기준으로 count개 가져오기
     @Query(value = "SELECT * FROM Video join User on Video.posted_by = User.id and Video.posted_by = :userId " +
