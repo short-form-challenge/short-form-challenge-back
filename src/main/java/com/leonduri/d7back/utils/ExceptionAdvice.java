@@ -7,6 +7,7 @@ import com.leonduri.d7back.utils.exception.CEmailSignInFailedException;
 import com.leonduri.d7back.utils.exception.CUserNotFoundException;
 import com.leonduri.d7back.utils.exception.CVideoNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.annotation.Secured;
@@ -113,5 +114,12 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ApiResponse nicknameInvalid(HttpServletRequest request, CNicknameInvalidException e) {
         return ApiResponse.fail(CNicknameInvalidException.errorMsg);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ApiResponse dataIntegrityViolation(HttpServletRequest request, DataIntegrityViolationException e) {
+        // unique data값 규칙 위반, nullable하지 않은 값 규칙 위반
+        return ApiResponse.fail("데이터베이스에 명시된 데이터 규칙을 위반했습니다.");
     }
 }
