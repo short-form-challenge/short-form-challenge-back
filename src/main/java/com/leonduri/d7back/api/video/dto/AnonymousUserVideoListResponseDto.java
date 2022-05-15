@@ -6,6 +6,8 @@ import com.leonduri.d7back.api.video.Video;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class AnonymousUserVideoListResponseDto {
@@ -16,6 +18,7 @@ public class AnonymousUserVideoListResponseDto {
     public Long likeCnt;
     public Boolean isLiked = false;
     UserSimpleResponseDto postedBy;
+    public LocalDateTime postedAt;
     public Category category;
 
     public AnonymousUserVideoListResponseDto(Video video) {
@@ -24,6 +27,7 @@ public class AnonymousUserVideoListResponseDto {
         this.title = video.getTitle();
         this.thumbnailPath = video.getThumbnailPath();
         this.likeCnt = video.getLikeCnt();
+        this.postedAt = video.getPostedAt();
 
         this.postedBy = new UserSimpleResponseDto(video.getPostedBy());
         this.category = video.getCategoryId();

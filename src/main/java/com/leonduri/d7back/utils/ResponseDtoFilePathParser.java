@@ -10,16 +10,20 @@ public class ResponseDtoFilePathParser {
     private static final String videoFilePath = baseFilePath + "videos/";
 
     public static String parseProfileFilePath(String originalPath) {
+        if (originalPath == null) return null;
         String[] paths = originalPath.split("/");
+
         return profileFilePath + paths[paths.length - 1];
     }
 
     public static String parseThumbnailFilePath(String originalPath) {
+        if (originalPath == null) return null;
         String[] paths = originalPath.split("/");
         return thumbnailFilePath + paths[paths.length - 1];
     }
 
     public static String parseVideoFilePath(String originalPath) {
+        if (originalPath == null) return null;
         String[] paths = originalPath.split("/");
         return videoFilePath + paths[paths.length - 1];
     }
