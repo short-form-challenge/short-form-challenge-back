@@ -14,10 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
   
     Optional<User> findByEmail(String email);
 
-    @Query(value = "SELECT * FROM User limit :count offset :page", nativeQuery = true)
+    @Query(value = "SELECT * FROM user limit :count offset :page", nativeQuery = true)
     List<User> findAdminUserList(@Param("count")Long count, @Param("page") Long page);
 
-    @Query(value = "select count(id) from User", nativeQuery = true)
+    @Query(value = "select count(id) from user", nativeQuery = true)
     Long countAllUser();
   
     Optional<User> findByNickname(String nickname);
