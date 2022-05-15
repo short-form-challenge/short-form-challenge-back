@@ -3,6 +3,7 @@ package com.leonduri.d7back.api.video.dto;
 import com.leonduri.d7back.api.category.Category;
 import com.leonduri.d7back.api.user.dto.UserSimpleResponseDto;
 import com.leonduri.d7back.api.video.Video;
+import com.leonduri.d7back.utils.ResponseDtoFilePathParser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,7 @@ public class AnonymousUserVideoListResponseDto {
         this.id = video.getId();
         this.showId = video.getShowId();
         this.title = video.getTitle();
-        this.thumbnailPath = video.getThumbnailPath();
+        this.thumbnailPath = ResponseDtoFilePathParser.parseThumbnailFilePath(video.getThumbnailPath());
         this.likeCnt = video.getLikeCnt();
         this.postedAt = video.getPostedAt();
 
