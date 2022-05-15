@@ -39,7 +39,7 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
             "where video.show_id >= :showId order by video.show_id, video.id desc limit :count", nativeQuery = true)
     List<Video> getMyVideoList(@Param("userId") Long userId, @Param("showId")Long showId, @Param("count") Integer count);
 
-    @Query(value = "SELECT * FROM video join User on video.posted_by = User.id " +
+    @Query(value = "SELECT * FROM video join User on video.posted_by = user.id " +
             "join category on video.category_id = category.id and video.category_id = :categoryId " +
             "where video.show_id >= :showId order by video.show_id, video.id desc limit :count", nativeQuery = true)
     List<Video> getMainVideoList(@Param("categoryId") Long categoryId, @Param("showId")Long showId, @Param("count") Integer count);
@@ -57,7 +57,7 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     //Admin API
     @Modifying
     @Transactional
-    @Query(value = "delete from video where video.posted_by = :userId", nativeQuery = true)
+    @Query(value = "delete from video where video.posted_by = :userId" , nativeQuery = true)
     void deleteVideosByPostedBy(@Param("userId") Long postedBy);
 
     @Query(value = "SELECT * FROM video join User on video.posted_by = user.id and video.posted_by = :userId " +
