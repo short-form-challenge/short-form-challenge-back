@@ -29,8 +29,7 @@ public class UserProfileResponseDto {
         this.ongoingChallengeCnt = 0;
         for (Challenge c: cList) {
             this.totalBadgeCnt += c.getBadgeCnt();
-            if (c.getDayCnt() > 0 && c.getLastChallengedAt().equals(LocalDate.now()))
-                this.ongoingChallengeCnt++;
+            if (c.getDayCnt() > 0) this.ongoingChallengeCnt++;
         }
         this.challenges = cList.stream().map(ChallengeByUserResponseDto::new)
                 .collect(Collectors.toList());

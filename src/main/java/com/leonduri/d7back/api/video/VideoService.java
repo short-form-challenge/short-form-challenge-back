@@ -2,6 +2,8 @@ package com.leonduri.d7back.api.video;
 
 import com.leonduri.d7back.api.category.Category;
 import com.leonduri.d7back.api.category.CategoryRepository;
+import com.leonduri.d7back.api.challenge.Challenge;
+import com.leonduri.d7back.api.challenge.ChallengeRepository;
 import com.leonduri.d7back.api.user.User;
 import com.leonduri.d7back.api.user.UserRepository;
 import com.leonduri.d7back.api.user.dto.AdminUserResponseDto;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,7 @@ public class VideoService {
     private final UserRepository userRepository;
     private final FileSystemStorageService fileSystemStorageService;
     private final LikesRepository likesRepository;
+    private final ChallengeRepository challengeRepository;
 
     public VideoDetailResponseDto findVideoById(Long videoId, Long userId) throws Exception {
         User requestUser = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
@@ -206,6 +210,20 @@ public class VideoService {
         v.setFilePath(fileSystemStorageService.storeVideo(video, vid));
         v.setThumbnailPath(fileSystemStorageService.storeThumbnail(thumbnail, vid));
         v.setShowId(vid);
+
+        boolean isNewChallenge = true;
+        Challenge nowChallenge = null;
+        for (Challenge ch: u.getChallenges()) {
+            if (!ch.getCategory().getId().equals(c.getId())) continue;
+            isNewChallenge = false;
+            nowChallenge = ch;
+            break;
+        }
+        if (isNewChallenge) challengeRepository.save(new Challenge(u, c));
+        else {
+            nowChallenge.update(true);
+            challengeRepository.save(nowChallenge);
+        }
 
         // update
         videoRepository.save(v);

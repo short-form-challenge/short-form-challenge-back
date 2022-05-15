@@ -50,12 +50,8 @@ public class UserService {
          User user = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
 
          // challenge update
-        List<Challenge> challenges = user.getChallenges();
-        for (Challenge c: challenges) {
-            c.setBadgeCnt(c.getBadgeCnt() + c.getDayCnt() / 7);
-            c.setDayCnt(c.getDayCnt() % 7);
-            // challenge failed
-            if (!LocalDate.now().minusDays(1L).isAfter(c.getLastChallengedAt())) c.setDayCntZero();
+        for (Challenge c: user.getChallenges()) {
+            c.update(false);
             challengeRepository.save(c);
         }
         return new UserProfileResponseDto(user);
